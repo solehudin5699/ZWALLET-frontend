@@ -18,6 +18,7 @@ import InputPin from '../screens/InputPin';
 import ChangePassword from '../screens/ChangePassword';
 import ChangePin from '../screens/ChangePin';
 import Profile from '../screens/Profile';
+import PersonalInformation from '../screens/PersonalInformation';
 import SplashScreen from '../screens/SplashScreen';
 const Stack = createStackNavigator();
 // import {useSelector} from 'react-redux';
@@ -196,7 +197,28 @@ export default function AppRoutes() {
             },
           }}
         />
-
+        <Stack.Screen
+          name="PersonalInformation"
+          component={PersonalInformation}
+          options={{
+            title: 'Personal Information',
+            headerTintColor: '#4D4B57',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+            headerStyle: {
+              backgroundColor: 'rgba(99, 121, 244, 0.2)',
+              shadowColor: 'transparent',
+              shadowOffset: {
+                width: 0,
+                height: 0,
+              },
+              shadowOpacity: 0,
+              shadowRadius: 0,
+              elevation: 0,
+            },
+          }}
+        />
         <Stack.Screen
           name="ChangePassword"
           component={ChangePassword}

@@ -2,6 +2,8 @@ import {
   loginAPICreator,
   registrationAPICreator,
   updateUserAPICreator,
+  getUserInfoAPICreator,
+  validateTokenAPICreator,
 } from '../actions/auth';
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -30,6 +32,22 @@ const initialState = {
   isUpdatePending: false,
   isUpdateFulFilled: false,
   isUpdateRejected: false,
+
+  //GETUSERINFO
+  statusGet: false,
+  dataUser: [],
+  errorGet: undefined,
+  isGetPending: false,
+  isGetFulFilled: false,
+  isGetRejected: false,
+
+  //VALIDATETOKEN
+  statusToken: null,
+  dataValidate: [],
+  errorValidate: undefined,
+  isValidatePending: false,
+  isValidateFulFilled: false,
+  isValidateRejected: false,
 };
 
 const authAPIReducer = (prevState = initialState, action) => {
@@ -43,26 +61,23 @@ const authAPIReducer = (prevState = initialState, action) => {
     case String(loginAPICreator.fulfilled):
       let datalogin;
       let status;
+      let error;
       if (Number(action.payload.status) === 200) {
         datalogin = action.payload.data;
         status = 200;
-        // (async function () {
-        //   try {
-        //     await AsyncStorage.setItem('token', `${action.payload.data.token}`);
-        //   } catch (err) {
-        //     console.log(err);
-        //   }
-        // })();
+        error = undefined;
       } else {
         status = 500;
         datalogin = undefined;
+        error = action.payload.error;
       }
 
       return {
         ...prevState,
         statusLogin: status,
+        statusToken: 200,
         dataLogin: datalogin,
-        errorLogin: undefined,
+        errorLogin: error,
         isLoginPending: false,
         isLoginFulFilled: true,
         isLoginRejected: false,
@@ -71,7 +86,8 @@ const authAPIReducer = (prevState = initialState, action) => {
       return {
         ...prevState,
         statusLogin: 500,
-        errorLogin: action.payload,
+        statusToken: 500,
+        errorLogin: action.payload.error,
         isLoginRejected: true,
         isLoginPending: false,
         isLoginFulFilled: false,
@@ -111,20 +127,20 @@ const authAPIReducer = (prevState = initialState, action) => {
       };
     case String(updateUserAPICreator.fulfilled): {
       let statusSuccess;
-      let newData;
+      let error;
       if (Number(action.payload.status) === 200) {
         statusSuccess = 200;
-        // newData={...prevState.dataLogin, ...action.payload.data}
+        error = undefined;
       } else if (Number(action.payload.status) === 500) {
         statusSuccess = 500;
-        // statusReject=true
+        error = action.payload.error;
       }
       return {
         ...prevState,
         dataLogin: {...prevState.dataLogin, ...action.payload.data},
         statusUpdate: statusSuccess,
         dataUpdate: action.payload.data,
-        errorUpdate: undefined,
+        errorUpdate: error,
         isUpdatePending: false,
         isUpdateFulFilled: true,
         isUpdateRejected: false,
@@ -134,10 +150,80 @@ const authAPIReducer = (prevState = initialState, action) => {
       return {
         ...prevState,
         statusUpdate: 500,
-        errorUpdate: action.payload,
+        errorUpdate: action.payload.error,
         isUpdateRejected: true,
         isUpdatePending: false,
         isUpdateFulFilled: false,
+      };
+    case 'RESETSTATUSUPDATE':
+      return {
+        ...prevState,
+        statusUpdate: false,
+      };
+
+    //GETUSERINFO
+    case String(getUserInfoAPICreator.pending):
+      return {
+        ...prevState,
+        isGetPending: true,
+      };
+    case String(getUserInfoAPICreator.fulfilled): {
+      // let newData = {...prevState.dataLogin, ...action.payload.data};
+      return {
+        ...prevState,
+        dataLogin: {...prevState.dataLogin, ...action.payload.data},
+        statusGet: action.payload.status,
+        dataUser: action.payload.data,
+        errorGet: undefined,
+        isGetPending: false,
+        isGetFulFilled: true,
+        isGetRejected: false,
+      };
+    }
+    case String(getUserInfoAPICreator.rejected):
+      return {
+        ...prevState,
+        statusGet: 500,
+        errorGet: action.payload,
+        isGetRejected: true,
+        isGetPending: false,
+        isGetFulFilled: false,
+      };
+
+    //VALIDATETOKEN
+    case String(validateTokenAPICreator.pending):
+      return {
+        ...prevState,
+        isValidatePending: true,
+      };
+    case String(validateTokenAPICreator.fulfilled): {
+      // let newData = {...prevState.dataLogin, ...action.payload.data};
+      let status;
+      if (Number(action.payload.status) === 200) {
+        status = 200;
+      } else if (Number(action.payload.status) === 500) {
+        status = 500;
+      }
+      return {
+        ...prevState,
+        // dataLogin: {...prevState.dataLogin, ...action.payload.data},
+        // statusGet: action.payload.status,
+        statusToken: status,
+        dataValidate: action.payload.data,
+        errorValidate: undefined,
+        isValidatePending: false,
+        isValidateFulFilled: true,
+        isValidateRejected: false,
+      };
+    }
+    case String(validateTokenAPICreator.rejected):
+      return {
+        ...prevState,
+        statusToken: 500,
+        errorValidate: action.payload,
+        isValidateRejected: true,
+        isValidatePending: false,
+        isValidateFulFilled: false,
       };
 
     case 'LOGOUT': {
@@ -181,6 +267,11 @@ const authAPIReducer = (prevState = initialState, action) => {
       return {
         ...prevState,
         statusUpdate: null,
+      };
+    case 'RESETSTATUSTOKEN':
+      return {
+        ...prevState,
+        statusToken: null,
       };
     default:
       return prevState;

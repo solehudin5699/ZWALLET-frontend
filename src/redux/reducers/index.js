@@ -1,15 +1,15 @@
 import {combineReducers} from 'redux';
-import productsReducer from './products';
-// import requestProductsReducer from './requestProducts';
+import contactReducer from './contact';
+import transactionReducer from './transaction';
 import authAPIReducer from './auth';
 import modalReducer from './modal';
-import cartReducer from './cart';
+import socketReducer from './socket';
 //Combine reducers
 const indexReducer = combineReducers({
-  products: productsReducer,
-  // requestAPIProducts: requestProductsReducer,
+  contact: contactReducer,
+  transaction: transactionReducer,
   authAPI: authAPIReducer,
-  cart: cartReducer,
+  socket: socketReducer,
   modals: modalReducer,
 });
 

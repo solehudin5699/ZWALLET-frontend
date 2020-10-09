@@ -73,20 +73,7 @@ function AddIcon(props) {
   );
 }
 
-const HeaderConfirmation = ({navigation}) => {
-  // const {sortBy, orderBy, newest} = useSelector((state) => state.modals);
-  // const {cart} = useSelector((state) => state.cart);
-  // const {dataLogin} = useSelector((state) => state.authAPI);
-  const [keyword, setSearch] = useState('');
-  const updateSearch = (key) => {
-    setSearch(key);
-  };
-  // const dispatch = useDispatch();
-  // useEffect(() => {
-  //   dispatch(setResetCreator());
-  //   dispatch(getProductsAPICreator('', sortBy, orderBy, newest, 1));
-  //   dispatch(setPageCreator(1));
-  // }, [dispatch, sortBy, orderBy, newest]);
+const HeaderConfirmation = (props) => {
   return (
     <Header
       // span
@@ -95,11 +82,9 @@ const HeaderConfirmation = ({navigation}) => {
         backgroundColor: 'transparent',
         flexDirection: 'column',
         justifyContent: 'center',
-        alignItems: 'center',
-        height: 140,
+        alignItems: 'flex-start',
+        height: 110,
         borderBottomWidth: 0,
-        // borderBottomStartRadius: 15,
-        // borderBottomEndRadius: 15,
         paddingLeft: 0,
         paddingRight: 0,
         shadowColor: 'tranparent',
@@ -118,7 +103,8 @@ const HeaderConfirmation = ({navigation}) => {
           color: '#514F5B',
           fontWeight: 'bold',
           alignSelf: 'flex-start',
-          padding: 15,
+          paddingHorizontal: 15,
+          // marginBottom: 0,
         }}>
         Transfer to
       </Text>
@@ -130,7 +116,7 @@ const HeaderConfirmation = ({navigation}) => {
             flex: 1,
             borderBottomStartRadius: 15,
             borderBottomEndRadius: 15,
-            justifyContent: 'center',
+            justifyContent: 'flex-start',
             alignItems: 'flex-end',
             flexDirection: 'row',
             // height: '100%',
@@ -141,11 +127,12 @@ const HeaderConfirmation = ({navigation}) => {
             style={{
               flex: 1,
               // marginBottom: 20,
+              marginTop: 0,
               width: '100%',
               backgroundColor: '#FFFFFF',
               flexDirection: 'row',
-              height: 80,
-              justifyContent: 'space-between',
+              height: 70,
+              justifyContent: 'flex-start',
               alignItems: 'center',
               borderRadius: 10,
               shadowColor: 'rgba(0, 0, 0,0.05)',
@@ -163,10 +150,29 @@ const HeaderConfirmation = ({navigation}) => {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <Thumbnail
-                source={require('../../assets/images/profile.png')}
-                style={{width: 56, height: 56, borderRadius: 10}}
-              />
+              {props.receiverDetail.image ? (
+                <Thumbnail
+                  source={{
+                    uri: `http://192.168.43.220:8000${props.receiverDetail.image}`,
+                  }}
+                  style={{width: 56, height: 56, borderRadius: 10}}
+                />
+              ) : (
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: '#EBEEF2',
+                    borderRadius: 10,
+                  }}>
+                  <Icon
+                    name="person-outline"
+                    size={40}
+                    color="#6379F4"
+                    type="ionicons"
+                  />
+                </View>
+              )}
             </View>
             <View
               style={{
@@ -183,9 +189,15 @@ const HeaderConfirmation = ({navigation}) => {
                   marginBottom: 10,
                   fontWeight: 'bold',
                 }}>
-                Haloo
+                {props.receiverDetail.name
+                  ? props.receiverDetail.name
+                  : props.receiverDetail.username}
               </Text>
-              <Text style={{fontSize: 14, color: '#7A7886'}}>Haloo</Text>
+              <Text style={{fontSize: 14, color: '#7A7886'}}>
+                {props.receiverDetail.noHp
+                  ? props.receiverDetail.noHp
+                  : 'Number phone is empty'}
+              </Text>
             </View>
           </View>
         </View>

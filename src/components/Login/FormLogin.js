@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View, Dimensions} from 'react-native';
+import {StyleSheet, Text, View, ActivityIndicator} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import {Button} from 'native-base';
 import {Formik} from 'formik';
@@ -18,22 +18,33 @@ const SigninSchema = Yup.object().shape({
 
 const FormLogin = () => {
   const navigation = useNavigation();
-  const {statusLogin, isLoginPending} = useSelector((state) => state.authAPI);
+  const {statusLogin, isLoginPending, statusToken} = useSelector(
+    (state) => state.authAPI,
+  );
   const dispatch = useDispatch();
   const [isSecure, setSecure] = useState(true);
   const handleSecure = () => {
     let secure = !isSecure;
     setSecure(secure);
   };
+  const [error, setError] = useState(false);
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('blur', () => {
+      setError(false);
+    });
+
+    return unsubscribe;
+  }, [navigation]);
   useEffect(() => {
-    if (Number(statusLogin) === 200) {
-      navigation.navigate('Home');
+    if (Number(statusLogin) === 200 && Number(statusToken) === 200) {
+      setTimeout(() => {
+        navigation.navigate('Home');
+      }, 1000);
     } else if (Number(statusLogin) === 500) {
-      navigation.navigate('Login');
-      // setError(true);
-      // setTimeout(() => {
-      //   dispatch(resetStatusLoginCreator());
-      // }, 5000);
+      setError(true);
+      setTimeout(() => {
+        dispatch(resetStatusLoginCreator());
+      }, 1000);
     }
   }, [statusLogin]);
   return (
@@ -50,6 +61,7 @@ const FormLogin = () => {
         };
         // console.log(values);
         dispatch(loginAPICreator(body));
+        setError(false);
       }}
       validationSchema={SigninSchema}>
       {({
@@ -66,7 +78,26 @@ const FormLogin = () => {
         // console.log({...errors});
         return (
           <>
+            {isLoginPending ? (
+              <View style={{alignItems: 'center', justifyContent: 'center'}}>
+                <ActivityIndicator animating size="large" color="#6379F4" />
+              </View>
+            ) : null}
+            {error ? (
+              <View
+                style={{
+                  width: '100%',
+                  marginTop: 20,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Text style={{fontSize: 19, color: 'red'}}>
+                  Email or password is wrong
+                </Text>
+              </View>
+            ) : null}
             <Input
+              keyboardType="email-address"
               inputContainerStyle={{
                 borderBottomColor:
                   values.email && !errors.email ? '#6379F4' : null,

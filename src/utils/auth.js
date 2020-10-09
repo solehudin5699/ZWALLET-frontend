@@ -6,6 +6,9 @@ export const loginAPI = (body) => {
 export const registrationAPI = (body) => {
   return axios.post('http://192.168.43.220:8000/auth/registration', body);
 };
+export const getUserInfoAPI = (id) => {
+  return axios.get(`http://192.168.43.220:8000/auth/user/${id}`);
+};
 export const updateUserAPI = (id, body) => {
   return axios.patch(`http://192.168.43.220:8000/auth/update/${id}`, body, {
     headers: {
@@ -18,8 +21,8 @@ export const updateUserAPI = (id, body) => {
     },
   });
 };
-// export const validateTokenAPI = () => {
-//   return axios.post('http://localhost:8000/auth/validate', null, {
-//     headers: {'x-access-token': `bearer ${localStorage.getItem('token')}`},
-//   });
-// };
+export const validateTokenAPI = (token) => {
+  return axios.post('http://192.168.43.220:8000/auth/validate', null, {
+    headers: {'x-access-token': `bearer ${token}`},
+  });
+};

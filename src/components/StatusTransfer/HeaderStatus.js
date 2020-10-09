@@ -5,20 +5,8 @@ import {SearchBar, Icon} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector, useDispatch} from 'react-redux';
 
-const HeaderStatus = ({navigation}) => {
-  // const {sortBy, orderBy, newest} = useSelector((state) => state.modals);
-  // const {cart} = useSelector((state) => state.cart);
-  // const {dataLogin} = useSelector((state) => state.authAPI);
-  const [keyword, setSearch] = useState('');
-  const updateSearch = (key) => {
-    setSearch(key);
-  };
-  // const dispatch = useDispatch();
-  // useEffect(() => {
-  //   dispatch(setResetCreator());
-  //   dispatch(getProductsAPICreator('', sortBy, orderBy, newest, 1));
-  //   dispatch(setPageCreator(1));
-  // }, [dispatch, sortBy, orderBy, newest]);
+const HeaderStatus = () => {
+  const {statusAdd} = useSelector((state) => state.transaction);
   return (
     <>
       <StatusBar backgroundColor="rgba(99, 121, 244, 0.2)" />
@@ -26,11 +14,10 @@ const HeaderStatus = ({navigation}) => {
         <View style={{width: '15%', marginTop: 20}}>
           <Icon
             reverse
-            name="check"
+            name={statusAdd === 200 ? 'check' : 'close'}
             type="material"
-            color="#1EC15F"
+            color={statusAdd === 200 ? '#1EC15F' : '#FF5B37'}
             size={25}
-            onPress={() => dispatch(modalFilterAction(true))}
           />
         </View>
         <Text
@@ -40,20 +27,22 @@ const HeaderStatus = ({navigation}) => {
             fontWeight: 'bold',
             color: '#3A3D42',
           }}>
-          Transfer Success
+          {Number(statusAdd) === 200 ? 'Transfer Success' : 'Transfer Failed'}
         </Text>
-        {/* <Text
-          style={{
-            fontSize: 16,
-            marginBottom: 20,
-            color: '#3A3D42',
-            textAlign: 'center',
-            paddingHorizontal: 30,
-            marginTop: 10,
-          }}>
-          We can’t transfer your money at the moment, we recommend you to check
-          your internet connection and try again.
-        </Text> */}
+        {Number(statusAdd) === 200 ? null : (
+          <Text
+            style={{
+              fontSize: 16,
+              marginBottom: 20,
+              color: '#3A3D42',
+              textAlign: 'center',
+              paddingHorizontal: 30,
+              marginTop: 10,
+            }}>
+            We can’t transfer your money at the moment, we recommend you to
+            check your internet connection and try again.
+          </Text>
+        )}
       </View>
     </>
   );

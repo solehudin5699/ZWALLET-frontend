@@ -4,8 +4,10 @@ import {
   loginAPI,
   registrationAPI,
   updateUserAPI,
-  // validateTokenAPI,
+  getUserInfoAPI,
+  validateTokenAPI,
 } from '../../utils/auth';
+// import {addTransactionAPI} from "../../utils/transaction"
 
 export const loginAPICreator = createAsyncAction('LOGIN', async (body) => {
   const res = await loginAPI(body);
@@ -16,6 +18,20 @@ export const registrationAPICreator = createAsyncAction(
   'REGISTRATION',
   async (body) => {
     const res = await registrationAPI(body);
+    return res.data;
+  },
+);
+export const validateTokenAPICreator = createAsyncAction(
+  'VALIDATETOKEN',
+  async (body) => {
+    const res = await validateTokenAPI(body);
+    return res.data;
+  },
+);
+export const getUserInfoAPICreator = createAsyncAction(
+  'GETUSERINFO',
+  async (id) => {
+    const res = await getUserInfoAPI(id);
     return res.data;
   },
 );
@@ -40,6 +56,11 @@ export const logoutCreator = (event) => {
     type: 'LOGOUT',
   };
 };
+export const resetStatusTokenCreator = () => {
+  return {
+    type: 'RESETSTATUSTOKEN',
+  };
+};
 export const updateUserAPICreator = createAsyncAction(
   'UPDATEUSER',
   async (id, body) => {
@@ -47,3 +68,9 @@ export const updateUserAPICreator = createAsyncAction(
     return res.data;
   },
 );
+
+export const resetToastCreator = () => {
+  return {
+    type: 'RESETTOAST',
+  };
+};

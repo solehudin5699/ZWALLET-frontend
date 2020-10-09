@@ -1,5 +1,12 @@
-import React, {Component} from 'react';
-import {Image, View, FlatList, TouchableOpacity} from 'react-native';
+import React, {useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  Image,
+  View,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native';
 import {
   Container,
   Title,
@@ -13,50 +20,35 @@ import {
   Header,
   Card,
   CardItem,
+  Input,
 } from 'native-base';
 import {Icon} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
-let data = [
-  {
-    name: 'Si Doel',
-    // image:
-    transaction_type: 'Transfer',
-    value: 20000,
-  },
-  {
-    name: 'Sueb',
-    // image:
-    transaction_type: 'Subscription',
-    value: 20000,
-  },
-  {
-    name: 'Benyamin',
-    // image:
-    transaction_type: 'Transfer',
-    value: 20000,
-  },
-  {
-    name: 'Parto',
-    // image:
-    transaction_type: 'Subscription',
-    value: 20000,
-  },
-  {
-    name: 'Sule',
-    // image:
-    transaction_type: 'Transfer',
-    value: 20000,
-  },
-  {
-    name: 'Eko',
-    // image:
-    transaction_type: 'Transfer',
-    value: 20000,
-  },
-];
+import {getTransactionAPICreator} from '../../redux/actions/transaction';
 
 const ContentHome = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const {dataLogin} = useSelector((state) => state.authAPI);
+  const {transaction} = useSelector((state) => state.transaction);
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      dispatch(
+        getTransactionAPICreator(
+          Number(dataLogin.user_id),
+          'id_transaction',
+          'DESC',
+          1,
+          10,
+        ),
+      );
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+  function formatRupiah(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  }
   return (
     <>
       <View
@@ -112,17 +104,17 @@ const ContentHome = () => {
       </View>
 
       <FlatList
-        data={data}
+        data={transaction}
         numColumns={1}
         renderItem={({item}) => (
           <View
             style={{
               flex: 1,
-              marginBottom: 20,
+              marginBottom: 15,
               width: '100%',
               backgroundColor: '#FFFFFF',
               flexDirection: 'row',
-              height: 96,
+              height: 80,
               justifyContent: 'space-between',
               alignItems: 'center',
               borderRadius: 20,
@@ -141,10 +133,41 @@ const ContentHome = () => {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <Thumbnail
-                source={require('../../assets/images/profile.png')}
-                style={{width: 56, height: 56, borderRadius: 10}}
-              />
+              {dataLogin.user_id === item.id_sender ? (
+                item.image_receiver ? (
+                  <Thumbnail
+                    source={{
+                      uri: `http://192.168.43.220:8000${item.image_receiver}`,
+                    }}
+                    style={{width: 56, height: 56, borderRadius: 10}}
+                  />
+                ) : (
+                  <View style={styles.containerIcon}>
+                    <Icon
+                      name="person-outline"
+                      size={50}
+                      color="#6379F4"
+                      type="ionicons"
+                    />
+                  </View>
+                )
+              ) : item.image_sender ? (
+                <Thumbnail
+                  source={{
+                    uri: `http://192.168.43.220:8000${item.image_sender}`,
+                  }}
+                  style={{width: 56, height: 56, borderRadius: 10}}
+                />
+              ) : (
+                <View style={styles.containerIcon}>
+                  <Icon
+                    name="person-outline"
+                    size={50}
+                    color="#6379F4"
+                    type="ionicons"
+                  />
+                </View>
+              )}
             </View>
             <View
               style={{
@@ -161,25 +184,46 @@ const ContentHome = () => {
                   marginBottom: 10,
                   fontWeight: 'bold',
                 }}>
-                {item.name}
+                {dataLogin.user_id === item.id_sender
+                  ? item.name_receiver
+                    ? item.name_receiver
+                    : item.username_receiver
+                    ? item.username_receiver
+                    : 'Anonim'
+                  : item.name_sender
+                  ? item.name_sender
+                  : item.username_sender
+                  ? item.username_sender
+                  : 'Anonim'}
+
+                {/* {item.name} */}
               </Text>
               <Text style={{fontSize: 14, color: '#7A7886'}}>
-                {item.transaction_type}
+                {dataLogin.user_id === item.id_sender ? 'Transfer' : 'Transfer'}
+                {/* {item.type_transaction} */}
               </Text>
             </View>
-            <View style={{width: '30%'}}>
+            <View
+              style={{
+                width: '30%',
+                alignItems: 'flex-end',
+                paddingRight: 30,
+              }}>
               <Text
                 style={{
                   fontSize: 18,
                   color:
-                    item.transaction_type === 'Transfer'
-                      ? '#1EC15F'
-                      : '#FF5B37',
+                    dataLogin.user_id === item.id_sender
+                      ? '#FF5B37'
+                      : '#1EC15F',
                   marginBottom: 10,
                   fontWeight: 'bold',
                 }}>
-                {item.transaction_type === 'Transfer' ? '+' : '-'}
-                Rp. 20.000
+                {dataLogin.user_id === item.id_sender
+                  ? `-Rp${formatRupiah(Number(item.nominal))}`
+                  : `+Rp${formatRupiah(Number(item.nominal))}`}
+                {/* {item.transaction_type === 'Transfer' ? '+' : '-'}
+                Rp. 20.000 */}
               </Text>
             </View>
           </View>
@@ -192,3 +236,53 @@ const ContentHome = () => {
 };
 
 export default ContentHome;
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: 'transparent',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    height: 100,
+    borderBottomStartRadius: 15,
+    borderBottomEndRadius: 15,
+    paddingLeft: 0,
+    paddingRight: 0,
+    shadowColor: 'transparent',
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0,
+    shadowRadius: 0,
+    elevation: 0,
+    // width: '100%',
+  },
+  contentHeader: {
+    backgroundColor: '#6379F4',
+    margin: 0,
+    flex: 1,
+    borderBottomStartRadius: 15,
+    borderBottomEndRadius: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    height: '100%',
+  },
+  containerImage: {
+    flex: 1,
+    width: '25%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
+    // backgroundColor: 'red',
+  },
+  containerIcon: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#EBEEF2',
+    borderRadius: 10,
+    // width: '60%',
+    // height: '50%',
+  },
+});

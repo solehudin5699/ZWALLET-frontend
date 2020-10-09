@@ -4,33 +4,46 @@ import {Button} from 'native-base';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {Input, Icon} from 'react-native-elements';
+import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 
-const SigninSchema = Yup.object().shape({
-  notes: Yup.string().min(0).max(20, 'Max 20 characters').required(''),
-  currency: Yup.number().max(999999999999, 'Maximum 12 digit'),
-});
+// const SigninSchema = Yup.object().shape({
+//   notes: Yup.string().min(0).max(20, 'Max 20 characters').required(''),
+//   nominal: Yup.number().max(999999999999, 'Maximum 12 digit'),
+// });
 
-const FormTranfer = () => {
+const FormTranfer = (props) => {
+  const [balance, setBalance] = useState();
   const navigation = useNavigation();
-  const [isSecure, setSecure] = useState(true);
-  const handleSecure = () => {
-    let secure = !isSecure;
-    setSecure(secure);
-  };
+  const {dataLogin} = useSelector((state) => state.authAPI);
+  function formatRupiah(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ',00';
+  }
+  const SigninSchema = Yup.object().shape({
+    notes: Yup.string().min(0).max(20, 'Max 20 characters').required(''),
+    nominal: Yup.number().max(
+      Number(balance),
+      `Your balance is only Rp${formatRupiah(Number(balance))}`,
+    ),
+  });
+  useEffect(() => {
+    setBalance(Number(dataLogin.balance));
+  }, [dataLogin]);
   return (
     <Formik
       initialValues={{
-        currency: null,
+        nominal: null,
         notes: '',
       }}
       //Will submit if not error
       onSubmit={(values) => {
-        let params = {
-          currency: values.currency,
+        let data = {
+          nominal: values.nominal,
           notes: values.notes,
+          ...props.receiverDetail,
         };
-        navigation.navigate('Confirmation');
+        // console.log(data);
+        navigation.navigate('Confirmation', data);
       }}
       validationSchema={SigninSchema}>
       {({
@@ -48,10 +61,10 @@ const FormTranfer = () => {
         return (
           <>
             <Text style={{alignSelf: 'center', color: '#7C7895'}}>
-              Rp. 120.000 Available
+              Rp{formatRupiah(Number(balance))} Available
             </Text>
             <Input
-              keyboardType="numeric"
+              keyboardType="number-pad"
               textAlign={'center'}
               inputContainerStyle={{
                 borderBottomWidth: 0,
@@ -68,12 +81,12 @@ const FormTranfer = () => {
                 width: '20%',
               }}
               // placeholderTextColor="#6379F4"
-              onChangeText={handleChange('currency')}
-              onBlur={handleBlur('currency')}
-              value={values.currency}
-              touched={touched.currency}
+              onChangeText={handleChange('nominal')}
+              onBlur={handleBlur('nominal')}
+              value={values.nominal}
+              touched={touched.nominal}
               errorMessage={
-                touched.currency || errors.currency ? errors.currency : null
+                touched.nominal || errors.nominal ? errors.nominal : null
               }
               placeholder="0.00"
             />
@@ -100,26 +113,26 @@ const FormTranfer = () => {
             <View style={styles.containerButton}>
               <Button
                 style={
-                  values.currency && values.notes && !errors.length
+                  values.nominal &&
+                  values.notes &&
+                  !errors.nominal &&
+                  !errors.notes
                     ? styles.buttonActive
                     : styles.buttonInactive
                 }
                 onPress={handleSubmit}
                 // disabled={false}
                 disabled={
-                  values.currency && values.notes && !errors.length
+                  values.nominal &&
+                  values.notes &&
+                  !errors.nominal &&
+                  !errors.notes
                     ? false
                     : true
                 }>
                 <Text style={{color: '#ffffff', fontSize: 20}}>Continue</Text>
               </Button>
             </View>
-            {/* <Text
-              onPress={() => alert('Haloo')}
-              style={{alignSelf: 'center', marginRight: 20}}>
-              Don't have an account? Let's{' '}
-              <Text style={{color: '#6379F4'}}>Sign Up</Text>
-            </Text> */}
           </>
         );
       }}

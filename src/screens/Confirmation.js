@@ -1,29 +1,30 @@
-import React, {Component} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Image, View, StyleSheet, Dimensions} from 'react-native';
-import {
-  Container,
-  Title,
-  Button,
-  Text,
-  Left,
-  Right,
-  Body,
-  Thumbnail,
-  Content,
-  Header,
-  Card,
-  CardItem,
-} from 'native-base';
+import {Container, Content} from 'native-base';
 import HeaderConfirmation from '../components/Confirmation/HeaderConfirmation';
 import ContentConfirmation from '../components/Confirmation/ContentConfirmation';
 import {Icon} from 'react-native-elements';
 
-const Confirmation = () => {
+const Confirmation = (props) => {
+  const [receiverDetail, setReceiverDetail] = useState('');
+  useEffect(() => {
+    const {route} = props;
+    const dataReceiver = {
+      user_id: route.params?.user_id,
+      name: route.params?.name,
+      username: route.params?.username,
+      image: route.params?.image,
+      noHp: route.params?.noHp,
+      nominal: route.params?.nominal,
+      notes: route.params?.notes,
+    };
+    setReceiverDetail(dataReceiver);
+  }, [props]);
   return (
     <Container style={{backgroundColor: 'rgba(99, 121, 244, 0.2)'}}>
-      <HeaderConfirmation />
       <Content>
-        <ContentConfirmation />
+        <HeaderConfirmation receiverDetail={receiverDetail} />
+        <ContentConfirmation receiverDetail={receiverDetail} />
       </Content>
     </Container>
   );

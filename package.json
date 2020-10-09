@@ -26,6 +26,8 @@
     "react-native-formik": "^1.7.8",
     "react-native-gesture-handler": "^1.8.0",
     "react-native-image-picker": "^2.3.4",
+    "react-native-modal": "^11.5.6",
+    "react-native-push-notification": "^6.1.1",
     "react-native-reanimated": "^1.13.0",
     "react-native-safe-area-context": "^3.1.8",
     "react-native-screens": "^2.11.0",
@@ -38,6 +40,7 @@
     "redux-persist": "^6.0.0",
     "redux-promise-middleware": "^6.1.2",
     "redux-promise-middleware-actions": "^3.0.1",
+    "socket.io-client": "^2.3.1",
     "yup": "^0.29.3"
   },
   "devDependencies": {

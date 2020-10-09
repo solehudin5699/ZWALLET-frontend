@@ -25,8 +25,9 @@ import {
 import {Icon} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
-import {useSelector, useDispatch} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {logoutCreator} from '../../redux/actions/auth';
+import {resetSocketCreator} from '../../redux/actions/socket';
 
 const ContentProfile = () => {
   const navigation = useNavigation();
@@ -45,14 +46,16 @@ const ContentProfile = () => {
     <>
       <View style={styles.container}>
         {/* Personal Information */}
-        <View style={styles.itemInformation}>
+        <Pressable
+          onPress={() => navigation.navigate('PersonalInformation')}
+          style={styles.itemInformation}>
           <View style={styles.containerTitle}>
             <Text style={styles.infoTitle}>Personal Information</Text>
           </View>
           <View style={styles.iconArrow}>
             <Icon name="arrow-right" size={25} color="#7A7886" type="feather" />
           </View>
-        </View>
+        </Pressable>
         {/* Change Password */}
         <Pressable
           onPress={() => navigation.navigate('ChangePassword')}
@@ -86,7 +89,7 @@ const ContentProfile = () => {
               trackColor={{false: 'rgba(169, 169, 169, 0.4)', true: '#6379F4'}}
               thumbColor={isEnabled ? '#FFFFFF' : '#f4f3f4'}
               ios_backgroundColor="#3e3e3e"
-              onValueChange={toggleSwitch}
+              onValueChange={() => toggleSwitch()}
               value={isEnabled}
             />
           </View>
@@ -95,7 +98,16 @@ const ContentProfile = () => {
         <Pressable
           onPress={() => {
             dispatch(logoutCreator());
-            navigation.navigate('Login');
+            navigation.reset({
+              index: 0,
+              routes: [
+                {
+                  name: 'Login',
+                },
+              ],
+            });
+            clearAppData();
+            dispatch(resetSocketCreator());
           }}
           style={styles.itemInformation}>
           <View style={{...styles.containerTitle, width: '100%'}}>

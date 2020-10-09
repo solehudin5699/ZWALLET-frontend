@@ -4,89 +4,8 @@ import {Header, View, Text, Thumbnail} from 'native-base';
 import {SearchBar, Icon} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector, useDispatch} from 'react-redux';
-// import {modalFilterAction} from '../redux/actions/modal';
-// import {
-//   getProductsAPICreator,
-//   setKeywordCreator,
-//   setResetCreator,
-//   setPageCreator,
-// } from '../redux/actions/products';
 
-function CartIcon(props) {
-  const navigation = useNavigation();
-  return (
-    <TouchableOpacity
-    // onPress={() => navigation.navigate(props.screenName)}
-    >
-      {/* {props.children} */}
-      <View style={{flexDirection: 'row', width: '15%'}}>
-        <Icon
-          name="shopping-cart"
-          type="material"
-          color="#517fa4"
-          size={24}
-          style={{width: '100%', marginRight: 15}}
-        />
-        <View
-          style={{
-            position: 'absolute',
-            height: 20,
-            width: 20,
-            borderRadius: 15,
-            backgroundColor: '#d8414a',
-            left: 20,
-            top: -10,
-            zIndex: 10,
-            justifyContent: 'center',
-          }}>
-          <Text
-            style={{
-              textAlign: 'center',
-              color: 'white',
-              fontSize: 12,
-            }}>
-            1{/* {props.numInCart} */}
-          </Text>
-        </View>
-      </View>
-    </TouchableOpacity>
-  );
-}
-
-function AddIcon(props) {
-  // const navigation = useNavigation();
-  return (
-    <TouchableOpacity
-    // onPress={() => navigation.navigate(props.screenName)}
-    >
-      {/* {props.children} */}
-      <View style={{flexDirection: 'row', width: '100%'}}>
-        <Icon
-          name="add-circle"
-          type="material"
-          color="#517fa4"
-          size={24}
-          style={{marginRight: 15}}
-        />
-      </View>
-    </TouchableOpacity>
-  );
-}
-
-const HeaderTransfer = ({navigation}) => {
-  // const {sortBy, orderBy, newest} = useSelector((state) => state.modals);
-  // const {cart} = useSelector((state) => state.cart);
-  // const {dataLogin} = useSelector((state) => state.authAPI);
-  const [keyword, setSearch] = useState('');
-  const updateSearch = (key) => {
-    setSearch(key);
-  };
-  // const dispatch = useDispatch();
-  // useEffect(() => {
-  //   dispatch(setResetCreator());
-  //   dispatch(getProductsAPICreator('', sortBy, orderBy, newest, 1));
-  //   dispatch(setPageCreator(1));
-  // }, [dispatch, sortBy, orderBy, newest]);
+const HeaderTransfer = (props) => {
   return (
     <Header
       // span
@@ -150,10 +69,29 @@ const HeaderTransfer = ({navigation}) => {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <Thumbnail
-              source={require('../../assets/images/profile.png')}
-              style={{width: 56, height: 56, borderRadius: 10}}
-            />
+            {props.receiverDetail.image ? (
+              <Thumbnail
+                source={{
+                  uri: `http://192.168.43.220:8000${props.receiverDetail.image}`,
+                }}
+                style={{width: 56, height: 56, borderRadius: 10}}
+              />
+            ) : (
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  backgroundColor: '#EBEEF2',
+                  borderRadius: 10,
+                }}>
+                <Icon
+                  name="person-outline"
+                  size={40}
+                  color="#6379F4"
+                  type="ionicons"
+                />
+              </View>
+            )}
           </View>
           <View
             style={{
@@ -170,9 +108,15 @@ const HeaderTransfer = ({navigation}) => {
                 marginBottom: 10,
                 fontWeight: 'bold',
               }}>
-              Haloo
+              {props.receiverDetail.name
+                ? props.receiverDetail.name
+                : props.receiverDetail.username}
             </Text>
-            <Text style={{fontSize: 14, color: '#7A7886'}}>Haloo</Text>
+            <Text style={{fontSize: 14, color: '#7A7886'}}>
+              {props.receiverDetail.noHp
+                ? props.receiverDetail.noHp
+                : 'Number phone is empty'}
+            </Text>
           </View>
         </View>
       </View>

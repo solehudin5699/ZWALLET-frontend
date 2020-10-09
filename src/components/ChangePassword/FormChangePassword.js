@@ -1,9 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View, Dimensions} from 'react-native';
+import {StyleSheet, Text, View, ActivityIndicator} from 'react-native';
 import {Button} from 'native-base';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {Input, Icon} from 'react-native-elements';
+import {useSelector, useDispatch} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
+import {
+  updateUserAPICreator,
+  resetStatusUpdateCreator,
+} from '../../redux/actions/auth';
 
 const SigninSchema = Yup.object().shape({
   currentPassword: Yup.string()
@@ -17,6 +23,7 @@ const SigninSchema = Yup.object().shape({
 });
 
 const FormChangePassword = () => {
+  const navigation = useNavigation();
   const [isCurrentPasswordSecure, setCurrentPasswordSecure] = useState(true);
   const [isNewPasswordSecure, setNewPasswordSecure] = useState(true);
   const [isRepeatPasswordSecure, setRepeatPasswordSecure] = useState(true);
@@ -32,6 +39,31 @@ const FormChangePassword = () => {
     let secure = !isRepeatPasswordSecure;
     setRepeatPasswordSecure(secure);
   };
+
+  const [isSuccess, setSuccess] = useState(null);
+  const {dataLogin, statusUpdate, isUpdatePending, errorUpdate} = useSelector(
+    (state) => state.authAPI,
+  );
+  const dispatch = useDispatch();
+  const changePin = () => {
+    let data = new FormData();
+    data.append('pin', pin);
+    dispatch(updateUserAPICreator(Number(dataLogin.user_id), data));
+  };
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('blur', () => {
+      dispatch(resetStatusUpdateCreator());
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+  useEffect(() => {
+    if (Number(statusUpdate) === 200) {
+      setSuccess(1);
+    } else if (Number(statusUpdate) === 500) {
+      setSuccess(0);
+    }
+  }, [dispatch, statusUpdate]);
   return (
     <Formik
       initialValues={{
@@ -41,12 +73,11 @@ const FormChangePassword = () => {
       }}
       //Will submit if not error
       onSubmit={(values) => {
-        let body = {
-          // username: values.username,
-          // email: values.email,
-          password: values.password,
-        };
-        console.log(values);
+        let data = new FormData();
+        data.append('password', values.currentPassword);
+        data.append('newPassword', values.password);
+        dispatch(updateUserAPICreator(Number(dataLogin.user_id), data));
+        // console.log(values);
         // dispatch(loginAPICreator(body));
       }}
       validationSchema={SigninSchema}>
@@ -64,6 +95,49 @@ const FormChangePassword = () => {
         // console.log({...errors});
         return (
           <>
+            {isSuccess === 1 ? (
+              <>
+                <View
+                  style={{
+                    width: '100%',
+                    marginTop: 20,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Icon
+                    reverse
+                    name="check"
+                    type="material"
+                    color="#1EC15F"
+                    size={25}
+                  />
+                  <Text style={{fontSize: 15}}>Success Updating Password</Text>
+                </View>
+              </>
+            ) : null}
+            {isSuccess === 0 ? (
+              <View
+                style={{
+                  width: '100%',
+                  marginTop: 20,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Icon
+                  reverse
+                  name="close"
+                  type="material"
+                  color="#FF5B37"
+                  size={25}
+                />
+                <Text style={{fontSize: 15}}>Failed Change Password</Text>
+              </View>
+            ) : null}
+            {isUpdatePending ? (
+              <View style={{alignItems: 'center', justifyContent: 'center'}}>
+                <ActivityIndicator animating size="large" color="#6379F4" />
+              </View>
+            ) : null}
             <Input
               inputContainerStyle={{
                 borderBottomColor: values.currentPassword ? '#6379F4' : null,
@@ -174,15 +248,27 @@ const FormChangePassword = () => {
 
             <View style={styles.containerButton}>
               <Button
+                disabled={
+                  !errors.currentPassword &&
+                  !errors.password &&
+                  !errors.confirm_password &&
+                  values.currentPassword &&
+                  values.password &&
+                  values.confirm_password
+                    ? false
+                    : true
+                }
                 style={
                   !errors.currentPassword &&
                   !errors.password &&
-                  !errors.confirm_password
+                  !errors.confirm_password &&
+                  values.currentPassword &&
+                  values.password &&
+                  values.confirm_password
                     ? styles.buttonActive
                     : styles.buttonInactive
                 }
                 onPress={handleSubmit}
-                // disabled={false}
                 disabled={
                   values.currentPassword &&
                   values.password &&
@@ -208,14 +294,15 @@ const styles = StyleSheet.create({
   containerButton: {
     alignItems: 'center',
     justifyContent: 'center',
-    flexDirection: 'row',
+    flexDirection: 'column',
     width: '100%',
-    marginTop: 50,
+    marginTop: 30,
     marginBottom: 30,
+    padding: 20,
     // padding: 20,
   },
   buttonActive: {
-    width: '95%',
+    width: '100%',
     backgroundColor: '#6379F4',
     borderRadius: 10,
     height: 50,
