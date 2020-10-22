@@ -6,6 +6,7 @@ import {
   updateUserAPI,
   getUserInfoAPI,
   validateTokenAPI,
+  requestResetPasswordAPI,
 } from '../../utils/auth';
 // import {addTransactionAPI} from "../../utils/transaction"
 
@@ -35,10 +36,22 @@ export const getUserInfoAPICreator = createAsyncAction(
     return res.data;
   },
 );
+export const requestResetAPICreator = createAsyncAction(
+  'RESETPASSWORD',
+  async (body) => {
+    const res = await requestResetPasswordAPI(body);
+    return res.data;
+  },
+);
 export const dataFormRegistCreator = (data) => {
   return {
     type: 'FORMREGIST',
     payload: data,
+  };
+};
+export const resetStatusRegistCreator = () => {
+  return {
+    type: 'RESETSTATUSREGIST',
   };
 };
 export const resetStatusLoginCreator = () => {
@@ -63,14 +76,15 @@ export const resetStatusTokenCreator = () => {
 };
 export const updateUserAPICreator = createAsyncAction(
   'UPDATEUSER',
-  async (id, body) => {
-    const res = await updateUserAPI(id, body);
+  async (id, body, token) => {
+    const res = await updateUserAPI(id, body, token);
     return res.data;
   },
 );
-
-export const resetToastCreator = () => {
-  return {
-    type: 'RESETTOAST',
-  };
-};
+export const checkOTPAPICreator = createAsyncAction(
+  'CHECKOTP',
+  async (body, token) => {
+    const res = await updateUserAPI(1, body, token);
+    return res.data;
+  },
+);

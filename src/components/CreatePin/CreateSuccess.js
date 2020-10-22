@@ -1,13 +1,20 @@
-import React, {useState} from 'react';
+import React, {useEffect} from 'react';
 import {StyleSheet, Text, View, Dimensions} from 'react-native';
-import {Container, Content, Footer, FooterTab, Button} from 'native-base';
+import {useDispatch, useSelector} from 'react-redux';
+import {Container, Content, Button} from 'native-base';
 import {Icon} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
+import {resetStatusRegistCreator} from '../../redux/actions/auth';
 
 const CreateSuccess = () => {
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const navigation = useNavigation();
-  const [pin, setPin] = useState();
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('blur', () => {
+      dispatch(resetStatusRegistCreator());
+    });
+    return unsubscribe;
+  }, [navigation]);
   return (
     <Container
       style={{

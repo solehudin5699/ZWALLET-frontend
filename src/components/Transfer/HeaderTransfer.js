@@ -4,6 +4,7 @@ import {Header, View, Text, Thumbnail} from 'native-base';
 import {SearchBar, Icon} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector, useDispatch} from 'react-redux';
+import {serverAddress} from '../../../sharedVariable';
 
 const HeaderTransfer = (props) => {
   return (
@@ -72,7 +73,7 @@ const HeaderTransfer = (props) => {
             {props.receiverDetail.image ? (
               <Thumbnail
                 source={{
-                  uri: `http://192.168.43.220:8000${props.receiverDetail.image}`,
+                  uri: `${serverAddress}${props.receiverDetail.image}`,
                 }}
                 style={{width: 56, height: 56, borderRadius: 10}}
               />

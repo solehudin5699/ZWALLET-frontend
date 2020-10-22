@@ -4,74 +4,7 @@ import {Header, View, Text, Thumbnail} from 'native-base';
 import {SearchBar, Icon} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector, useDispatch} from 'react-redux';
-// import {modalFilterAction} from '../redux/actions/modal';
-// import {
-//   getProductsAPICreator,
-//   setKeywordCreator,
-//   setResetCreator,
-//   setPageCreator,
-// } from '../redux/actions/products';
-
-function CartIcon(props) {
-  const navigation = useNavigation();
-  return (
-    <TouchableOpacity
-    // onPress={() => navigation.navigate(props.screenName)}
-    >
-      {/* {props.children} */}
-      <View style={{flexDirection: 'row', width: '15%'}}>
-        <Icon
-          name="shopping-cart"
-          type="material"
-          color="#517fa4"
-          size={24}
-          style={{width: '100%', marginRight: 15}}
-        />
-        <View
-          style={{
-            position: 'absolute',
-            height: 20,
-            width: 20,
-            borderRadius: 15,
-            backgroundColor: '#d8414a',
-            left: 20,
-            top: -10,
-            zIndex: 10,
-            justifyContent: 'center',
-          }}>
-          <Text
-            style={{
-              textAlign: 'center',
-              color: 'white',
-              fontSize: 12,
-            }}>
-            1{/* {props.numInCart} */}
-          </Text>
-        </View>
-      </View>
-    </TouchableOpacity>
-  );
-}
-
-function AddIcon(props) {
-  // const navigation = useNavigation();
-  return (
-    <TouchableOpacity
-    // onPress={() => navigation.navigate(props.screenName)}
-    >
-      {/* {props.children} */}
-      <View style={{flexDirection: 'row', width: '100%'}}>
-        <Icon
-          name="add-circle"
-          type="material"
-          color="#517fa4"
-          size={24}
-          style={{marginRight: 15}}
-        />
-      </View>
-    </TouchableOpacity>
-  );
-}
+import {serverAddress} from '../../../sharedVariable';
 
 const HeaderConfirmation = (props) => {
   return (
@@ -153,7 +86,7 @@ const HeaderConfirmation = (props) => {
               {props.receiverDetail.image ? (
                 <Thumbnail
                   source={{
-                    uri: `http://192.168.43.220:8000${props.receiverDetail.image}`,
+                    uri: `${serverAddress}${props.receiverDetail.image}`,
                   }}
                   style={{width: 56, height: 56, borderRadius: 10}}
                 />

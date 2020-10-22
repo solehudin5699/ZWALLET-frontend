@@ -16,19 +16,14 @@ import {
 } from 'native-base';
 import {Icon as IconProfile} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
+import {serverAddress} from '../../../sharedVariable';
 
 const HeaderHome = () => {
-  const [image, setImage] = useState('');
   const {dataLogin, statusLogin} = useSelector((state) => state.authAPI);
   const navigation = useNavigation();
   function formatRupiah(num) {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   }
-  useEffect(() => {
-    if (Number(statusLogin) === 200) {
-      setImage(dataLogin.image);
-    }
-  }, [statusLogin]);
   return (
     <Header
       // span
@@ -41,7 +36,7 @@ const HeaderHome = () => {
           {dataLogin.image ? (
             <Thumbnail
               source={{
-                uri: `http://192.168.43.220:8000${dataLogin.image}`,
+                uri: `${serverAddress}${dataLogin.image}`,
               }}
               style={{width: 56, height: 56, borderRadius: 10}}
             />

@@ -10,6 +10,8 @@ target 'zwallet' do
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
+  pod 'RNSmtpMailer', :path => '../node_modules/react-native-smtp-mailer'
+
   target 'zwalletTests' do
     inherit! :complete
     # Pods for testing

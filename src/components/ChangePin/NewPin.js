@@ -28,7 +28,9 @@ const FormNewPin = () => {
   const changePin = () => {
     let data = new FormData();
     data.append('pin', pin);
-    dispatch(updateUserAPICreator(Number(dataLogin.user_id), data));
+    dispatch(
+      updateUserAPICreator(Number(dataLogin.user_id), data, dataLogin.token),
+    );
   };
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('blur', () => {

@@ -26,6 +26,8 @@ import {useNavigation} from '@react-navigation/native';
 import {setResetCreator} from '../../redux/actions/transaction';
 import {showLocalNotification} from '../NotifHandler/NotifHandler';
 import PushNotification from 'react-native-push-notification';
+import {getTransactionAPICreator} from '../../redux/actions/transaction';
+import {serverAddress} from '../../../sharedVariable';
 
 const ContentStatus = (props) => {
   const channelId = 'status-transfer';
@@ -55,7 +57,7 @@ const ContentStatus = (props) => {
         (created) => console.log(`createChannel returned '${created}'`),
       );
       if (Number(statusAdd) === 200) {
-        let msg = `You has been success transfering `;
+        let msg = `Transfer is successfully. `;
         showLocalNotification('Transfer', msg, channelId);
       } else if (Number(statusAdd) === 500) {
         showLocalNotification('Transfer', 'Transfer is failed!', channelId);
@@ -64,32 +66,7 @@ const ContentStatus = (props) => {
 
     return unsubscribe;
   }, [navigation, statusAdd]);
-  // useEffect(() => {
-  //   PushNotification.createChannel(
-  //     {
-  //       channelId,
-  //       channelName: 'transaction notification',
-  //     },
-  //     (created) => console.log(`createChannel returned '${created}'`),
-  //   );
-  //   if (Number(statusAdd) === 200) {
-  //     let toName;
-  //     if (props.receiverDetail.name) {
-  //       toName = `${props.receiverDetail.name}`;
-  //     } else {
-  //       toName = `${props.receiverDetail.username}`;
-  //     }
-  //     setTimeout(() => {
-  //       showLocalNotification(
-  //         'Transfer',
-  //         `You has been success transfering to ${toName}`,
-  //         channelId,
-  //       );
-  //     }, 1000);
-  //   } else if (Number(statusAdd) === 500) {
-  //     showLocalNotification('Transfer', 'Transfer is failed!', channelId);
-  //   }
-  // }, [statusAdd]);
+
   let monthName = [
     'January',
     'February',
@@ -157,7 +134,7 @@ const ContentStatus = (props) => {
                 {props.receiverDetail.image ? (
                   <Thumbnail
                     source={{
-                      uri: `http://192.168.43.220:8000${props.receiverDetail.image}`,
+                      uri: `${serverAddress}${props.receiverDetail.image}`,
                     }}
                     style={{width: 56, height: 56, borderRadius: 10}}
                   />

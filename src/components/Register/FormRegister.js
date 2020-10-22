@@ -6,7 +6,10 @@ import * as Yup from 'yup';
 import {Input, Icon} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector, useDispatch} from 'react-redux';
-import {dataFormRegistCreator} from '../../redux/actions/auth';
+import {
+  dataFormRegistCreator,
+  registrationAPICreator,
+} from '../../redux/actions/auth';
 
 const SignupSchema = Yup.object().shape({
   username: Yup.string()
@@ -41,6 +44,7 @@ const FormRegister = () => {
         };
         console.log(values);
         dispatch(dataFormRegistCreator(body));
+        // dispatch(registrationAPICreator(body))
         navigation.navigate('CreatePin');
       }}
       validationSchema={SignupSchema}>
@@ -85,6 +89,7 @@ const FormRegister = () => {
               }
             />
             <Input
+              keyboardType="email-address"
               inputContainerStyle={{
                 borderBottomColor:
                   values.email && !errors.email ? '#6379F4' : null,

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, ActivityIndicator} from 'react-native';
-import {Button} from 'native-base';
+import {Button, Content} from 'native-base';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {Input, Icon} from 'react-native-elements';
@@ -76,7 +76,13 @@ const FormChangePassword = () => {
         let data = new FormData();
         data.append('password', values.currentPassword);
         data.append('newPassword', values.password);
-        dispatch(updateUserAPICreator(Number(dataLogin.user_id), data));
+        dispatch(
+          updateUserAPICreator(
+            Number(dataLogin.user_id),
+            data,
+            dataLogin.token,
+          ),
+        );
         // console.log(values);
         // dispatch(loginAPICreator(body));
       }}
@@ -138,114 +144,115 @@ const FormChangePassword = () => {
                 <ActivityIndicator animating size="large" color="#6379F4" />
               </View>
             ) : null}
-            <Input
-              inputContainerStyle={{
-                borderBottomColor: values.currentPassword ? '#6379F4' : null,
-              }}
-              onChangeText={handleChange('currentPassword')}
-              onBlur={handleBlur('currentPassword')}
-              value={values.currentPassword}
-              touched={touched.currentPassword}
-              errorMessage={
-                touched.currentPassword && errors.currentPassword
-                  ? errors.currentPassword
-                  : null
-              }
-              secureTextEntry={isCurrentPasswordSecure ? true : false}
-              placeholder="Current password"
-              leftIcon={
-                <Icon
-                  name="lock"
-                  size={22}
-                  color={
-                    values.currentPassword
-                      ? '#6379F4'
-                      : 'rgba(169, 169, 169, 0.8)'
-                  }
-                  type="feather"
-                />
-              }
-              rightIcon={
-                <Icon
-                  onPress={() => handleCurrentPassword()}
-                  name="eye-off"
-                  size={22}
-                  color="rgba(169, 169, 169, 0.8)"
-                  type="feather"
-                />
-              }
-            />
-            <Input
-              inputContainerStyle={{
-                borderBottomColor: values.password ? '#6379F4' : null,
-              }}
-              onChangeText={handleChange('password')}
-              onBlur={handleBlur('password')}
-              value={values.password}
-              touched={touched.password}
-              errorMessage={
-                touched.password && errors.password ? errors.password : null
-              }
-              secureTextEntry={isNewPasswordSecure ? true : false}
-              placeholder="New Password"
-              leftIcon={
-                <Icon
-                  name="lock"
-                  size={22}
-                  color={
-                    values.password ? '#6379F4' : 'rgba(169, 169, 169, 0.8)'
-                  }
-                  type="feather"
-                />
-              }
-              rightIcon={
-                <Icon
-                  onPress={() => handleNewPassword()}
-                  name="eye-off"
-                  size={22}
-                  color="rgba(169, 169, 169, 0.8)"
-                  type="feather"
-                />
-              }
-            />
-            <Input
-              inputContainerStyle={{
-                borderBottomColor: values.confirm_password ? '#6379F4' : null,
-              }}
-              onChangeText={handleChange('confirm_password')}
-              onBlur={handleBlur('confirm_password')}
-              value={values.confirm_password}
-              touched={touched.confirm_password}
-              errorMessage={
-                touched.confirm_password && errors.confirm_password
-                  ? errors.confirm_password
-                  : null
-              }
-              secureTextEntry={isRepeatPasswordSecure ? true : false}
-              placeholder="Repeat Password"
-              leftIcon={
-                <Icon
-                  name="lock"
-                  size={22}
-                  color={
-                    values.confirm_password
-                      ? '#6379F4'
-                      : 'rgba(169, 169, 169, 0.8)'
-                  }
-                  type="feather"
-                />
-              }
-              rightIcon={
-                <Icon
-                  onPress={() => handleRepeatPassword()}
-                  name="eye-off"
-                  size={22}
-                  color="rgba(169, 169, 169, 0.8)"
-                  type="feather"
-                />
-              }
-            />
-
+            <Content>
+              <Input
+                inputContainerStyle={{
+                  borderBottomColor: values.currentPassword ? '#6379F4' : null,
+                }}
+                onChangeText={handleChange('currentPassword')}
+                onBlur={handleBlur('currentPassword')}
+                value={values.currentPassword}
+                touched={touched.currentPassword}
+                errorMessage={
+                  touched.currentPassword && errors.currentPassword
+                    ? errors.currentPassword
+                    : null
+                }
+                secureTextEntry={isCurrentPasswordSecure ? true : false}
+                placeholder="Current password"
+                leftIcon={
+                  <Icon
+                    name="lock"
+                    size={22}
+                    color={
+                      values.currentPassword
+                        ? '#6379F4'
+                        : 'rgba(169, 169, 169, 0.8)'
+                    }
+                    type="feather"
+                  />
+                }
+                rightIcon={
+                  <Icon
+                    onPress={() => handleCurrentPassword()}
+                    name="eye-off"
+                    size={22}
+                    color="rgba(169, 169, 169, 0.8)"
+                    type="feather"
+                  />
+                }
+              />
+              <Input
+                inputContainerStyle={{
+                  borderBottomColor: values.password ? '#6379F4' : null,
+                }}
+                onChangeText={handleChange('password')}
+                onBlur={handleBlur('password')}
+                value={values.password}
+                touched={touched.password}
+                errorMessage={
+                  touched.password && errors.password ? errors.password : null
+                }
+                secureTextEntry={isNewPasswordSecure ? true : false}
+                placeholder="New Password"
+                leftIcon={
+                  <Icon
+                    name="lock"
+                    size={22}
+                    color={
+                      values.password ? '#6379F4' : 'rgba(169, 169, 169, 0.8)'
+                    }
+                    type="feather"
+                  />
+                }
+                rightIcon={
+                  <Icon
+                    onPress={() => handleNewPassword()}
+                    name="eye-off"
+                    size={22}
+                    color="rgba(169, 169, 169, 0.8)"
+                    type="feather"
+                  />
+                }
+              />
+              <Input
+                inputContainerStyle={{
+                  borderBottomColor: values.confirm_password ? '#6379F4' : null,
+                }}
+                onChangeText={handleChange('confirm_password')}
+                onBlur={handleBlur('confirm_password')}
+                value={values.confirm_password}
+                touched={touched.confirm_password}
+                errorMessage={
+                  touched.confirm_password && errors.confirm_password
+                    ? errors.confirm_password
+                    : null
+                }
+                secureTextEntry={isRepeatPasswordSecure ? true : false}
+                placeholder="Repeat Password"
+                leftIcon={
+                  <Icon
+                    name="lock"
+                    size={22}
+                    color={
+                      values.confirm_password
+                        ? '#6379F4'
+                        : 'rgba(169, 169, 169, 0.8)'
+                    }
+                    type="feather"
+                  />
+                }
+                rightIcon={
+                  <Icon
+                    onPress={() => handleRepeatPassword()}
+                    name="eye-off"
+                    size={22}
+                    color="rgba(169, 169, 169, 0.8)"
+                    type="feather"
+                  />
+                }
+              />
+            </Content>
             <View style={styles.containerButton}>
               <Button
                 disabled={
@@ -298,19 +305,19 @@ const styles = StyleSheet.create({
     width: '100%',
     marginTop: 30,
     marginBottom: 30,
-    padding: 20,
-    // padding: 20,
   },
   buttonActive: {
-    width: '100%',
+    width: '90%',
     backgroundColor: '#6379F4',
     borderRadius: 10,
     height: 50,
     justifyContent: 'center',
     alignItems: 'center',
+    alignSelf: 'center',
   },
   buttonInactive: {
-    width: '95%',
+    alignSelf: 'center',
+    width: '90%',
     backgroundColor: '#DADADA',
     borderRadius: 10,
     height: 50,

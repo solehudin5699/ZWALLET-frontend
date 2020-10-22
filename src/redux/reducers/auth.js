@@ -4,6 +4,8 @@ import {
   updateUserAPICreator,
   getUserInfoAPICreator,
   validateTokenAPICreator,
+  requestResetAPICreator,
+  checkOTPAPICreator,
 } from '../actions/auth';
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -48,6 +50,22 @@ const initialState = {
   isValidatePending: false,
   isValidateFulFilled: false,
   isValidateRejected: false,
+
+  //REQUEST TO RESET PASSWORD
+  statusReq: null,
+  dataReq: undefined,
+  errorReq: undefined,
+  isReqPending: false,
+  isReqFulFilled: false,
+  isReqRejected: false,
+
+  //OTP STATUS
+  statusOTP: null,
+  dataOTP: [],
+  errorOTP: undefined,
+  isOTPPending: false,
+  isOTPFulFilled: false,
+  isOTPRejected: false,
 };
 
 const authAPIReducer = (prevState = initialState, action) => {
@@ -159,6 +177,44 @@ const authAPIReducer = (prevState = initialState, action) => {
       return {
         ...prevState,
         statusUpdate: false,
+        statusReq: null,
+        statusOTP: null,
+      };
+
+    //REQUEST RESET
+    case String(requestResetAPICreator.pending):
+      return {
+        ...prevState,
+        isReqPending: true,
+      };
+    case String(requestResetAPICreator.fulfilled): {
+      let statusSuccess;
+      let error;
+      if (Number(action.payload.status) === 200) {
+        statusSuccess = 200;
+        error = undefined;
+      } else if (Number(action.payload.status) === 500) {
+        statusSuccess = 500;
+        error = action.payload.error;
+      }
+      return {
+        ...prevState,
+        statusReq: statusSuccess,
+        dataReq: action.payload.data,
+        errorReq: error,
+        isReqPending: false,
+        isReqFulFilled: true,
+        isReqRejected: false,
+      };
+    }
+    case String(requestResetAPICreator.rejected):
+      return {
+        ...prevState,
+        statusReq: 500,
+        errorReq: action.payload.error,
+        isReqRejected: true,
+        isReqPending: false,
+        isReqFulFilled: false,
       };
 
     //GETUSERINFO
@@ -197,7 +253,6 @@ const authAPIReducer = (prevState = initialState, action) => {
         isValidatePending: true,
       };
     case String(validateTokenAPICreator.fulfilled): {
-      // let newData = {...prevState.dataLogin, ...action.payload.data};
       let status;
       if (Number(action.payload.status) === 200) {
         status = 200;
@@ -206,8 +261,6 @@ const authAPIReducer = (prevState = initialState, action) => {
       }
       return {
         ...prevState,
-        // dataLogin: {...prevState.dataLogin, ...action.payload.data},
-        // statusGet: action.payload.status,
         statusToken: status,
         dataValidate: action.payload.data,
         errorValidate: undefined,
@@ -226,6 +279,46 @@ const authAPIReducer = (prevState = initialState, action) => {
         isValidateFulFilled: false,
       };
 
+    //CHECK OTP
+    case String(checkOTPAPICreator.pending):
+      return {
+        ...prevState,
+        isOTPPending: true,
+      };
+    case String(checkOTPAPICreator.fulfilled): {
+      let statusSuccess;
+      let error;
+      let reqStatus;
+      if (Number(action.payload.status) === 200) {
+        statusSuccess = 200;
+        error = undefined;
+        reqStatus = 500;
+      } else if (Number(action.payload.status) === 500) {
+        statusSuccess = 500;
+        error = action.payload.error;
+        reqStatus = 200;
+      }
+      return {
+        ...prevState,
+        statusOTP: statusSuccess,
+        dataOTP: action.payload.data,
+        errorOTP: error,
+        isOTPPending: false,
+        isOTPFulFilled: true,
+        isOTPRejected: false,
+        statusReq: reqStatus,
+      };
+    }
+    case String(checkOTPAPICreator.rejected):
+      return {
+        ...prevState,
+        statusOTP: 500,
+        errorOTP: action.payload.error,
+        isOTPRejected: true,
+        isOTPPending: false,
+        isOTPFulFilled: false,
+        statusReq: 200,
+      };
     case 'LOGOUT': {
       const clearAppData = async function () {
         try {
@@ -258,6 +351,17 @@ const authAPIReducer = (prevState = initialState, action) => {
         ...prevState,
         formRegist: dataFormRegist,
       };
+    case 'RESETSTATUSREGIST':
+      return {
+        ...prevState,
+        statusRegist: false,
+        dataRegist: [],
+        formRegist: undefined,
+        errorRegist: undefined,
+        isRegistPending: false,
+        isRegistFulFilled: false,
+        isRegistRejected: false,
+      };
     case 'RESETSTATUSLOGIN':
       return {
         ...prevState,
@@ -267,6 +371,7 @@ const authAPIReducer = (prevState = initialState, action) => {
       return {
         ...prevState,
         statusUpdate: null,
+        statusReq: null,
       };
     case 'RESETSTATUSTOKEN':
       return {

@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {
-  Image,
   ActivityIndicator,
   View,
   FlatList,
@@ -16,6 +15,7 @@ import {
   setResetCreator,
   setPageCreator,
 } from '../../redux/actions/contact';
+import {serverAddress} from '../../../sharedVariable';
 
 const ContactEmpty = () => {
   const {
@@ -188,7 +188,7 @@ const ContentContact = () => {
                 {item.image ? (
                   <Thumbnail
                     source={{
-                      uri: `http://192.168.43.220:8000${item.image}`,
+                      uri: `${serverAddress}${item.image}`,
                     }}
                     style={{width: 56, height: 56, borderRadius: 10}}
                   />

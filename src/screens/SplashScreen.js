@@ -36,13 +36,6 @@ const SplashScreen = ({navigation}) => {
           // dispatch(resetStatusTokenCreator());
         }, 3000);
       }
-      // if (isValidateFulFilled || isValidateRejected) {
-
-      // }
-
-      // setTimeout(() => {
-      //   navigation.navigate('Home');
-      // }, 3000);
     } else {
       setTimeout(() => {
         navigation.navigate('Login');

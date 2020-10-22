@@ -18,9 +18,12 @@ const SigninSchema = Yup.object().shape({
 
 const FormLogin = () => {
   const navigation = useNavigation();
-  const {statusLogin, isLoginPending, statusToken} = useSelector(
-    (state) => state.authAPI,
-  );
+  const {
+    statusLogin,
+    isLoginPending,
+    statusToken,
+    isValidatePending,
+  } = useSelector((state) => state.authAPI);
   const dispatch = useDispatch();
   const [isSecure, setSecure] = useState(true);
   const handleSecure = () => {
@@ -46,7 +49,7 @@ const FormLogin = () => {
         dispatch(resetStatusLoginCreator());
       }, 1000);
     }
-  }, [statusLogin]);
+  }, [statusLogin, statusToken]);
   return (
     <Formik
       initialValues={{
@@ -78,7 +81,7 @@ const FormLogin = () => {
         // console.log({...errors});
         return (
           <>
-            {isLoginPending ? (
+            {isLoginPending || isValidatePending ? (
               <View style={{alignItems: 'center', justifyContent: 'center'}}>
                 <ActivityIndicator animating size="large" color="#6379F4" />
               </View>
@@ -158,7 +161,7 @@ const FormLogin = () => {
               }
             />
             <Text
-              // onPress={() => setSecure(!isSecure)}
+              onPress={() => navigation.navigate('ResetPassword')}
               style={{alignSelf: 'flex-end', marginRight: 20}}>
               Forgot Password?
             </Text>

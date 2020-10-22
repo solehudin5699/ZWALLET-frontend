@@ -9,8 +9,17 @@ export const addTransactionAPICreator = createAsyncAction(
     return res.data;
   },
 );
+//For pagination
 export const getTransactionAPICreator = createAsyncAction(
   'GETTRANSACTION',
+  async (id, sortBy, orderBy, page, limit) => {
+    const res = await getTransactionAPI(id, sortBy, orderBy, page, limit);
+    return res.data;
+  },
+);
+//For home page
+export const getTransactionAPICreator_Home = createAsyncAction(
+  'GETTRANSACTION_HOME',
   async (id, sortBy, orderBy, page, limit) => {
     const res = await getTransactionAPI(id, sortBy, orderBy, page, limit);
     return res.data;

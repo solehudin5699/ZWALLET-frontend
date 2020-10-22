@@ -13,59 +13,58 @@ import {Container, Content, Footer, FooterTab, Button} from 'native-base';
 // import CreateSuccess from './CreateSuccess';
 import SmoothPinCodeInput from 'react-native-smooth-pincode-input';
 import {useNavigation} from '@react-navigation/native';
-import {
-  addTransactionAPICreator,
-  setResetCreator,
-} from '../../redux/actions/transaction';
+import {checkOTPAPICreator} from '../../redux/actions/auth';
 import {getUserInfoAPICreator} from '../../redux/actions/auth';
 
-const ContentInput = (props) => {
+const InputOTP = (props) => {
   const navigation = useNavigation();
-  const [pin, setPin] = useState();
-  const [isPinTrue, setPinStatus] = useState(true);
-  const {dataLogin} = useSelector((state) => state.authAPI);
-  const checkPin = (pin) => {
-    let status = Boolean(Number(dataLogin.pin).toString() === pin.toString());
-    console.log(status);
-    return setPinStatus(status);
-  };
-  const {statusAdd, isAddPending} = useSelector((state) => state.transaction);
   const dispatch = useDispatch();
-  const transferNow = () => {
-    let data = {
-      id_sender: Number(dataLogin.user_id),
-      id_receiver: Number(props.receiverDetail.user_id),
-      nominal: Number(props.receiverDetail.nominal),
-      type_transaction: 'Transfer',
-      notes: props.receiverDetail.notes,
-    };
-    dispatch(addTransactionAPICreator(data));
+  const [otp, setOtp] = useState();
+  const [error, setError] = useState(false);
+  const {
+    dataLogin,
+    dataReq,
+    statusReq,
+    dataOTP,
+    errorOTP,
+    isOTPPending,
+    statusOTP,
+  } = useSelector((state) => state.authAPI);
+  const checkPin = (otp) => {
+    let token = dataReq.token;
+    let data = new FormData();
+    data.append('otp', otp);
+    dispatch(checkOTPAPICreator(data, token));
   };
-
   useEffect(() => {
-    if (Number(statusAdd) === 200) {
-      dispatch(getUserInfoAPICreator(Number(dataLogin.user_id)));
-      let receiverDetail = {...props.receiverDetail};
-      navigation.navigate('StatusTransfer', receiverDetail);
-      // dispatch(setResetCreator());
-    } else if (Number(statusAdd) === 500) {
-      navigation.navigate('StatusTransfer', receiverDetail);
-      // dispatch(setResetCreator());
+    if (Number(statusOTP) === 500) {
+      setError(true);
     }
-  }, [dispatch, statusAdd]);
+  }, [statusOTP]);
+  useEffect(() => {
+    if (Number(statusReq) === 200) {
+      props.openModal();
+    }
+  }, [statusReq]);
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      setError(false);
+    });
+    return unsubscribe;
+  }, [navigation, dispatch]);
+
   return (
     <>
       <Content>
         <View style={styles.containerForm}>
-          <Text style={styles.createPin}>Enter PIN to Transfer</Text>
+          <Text style={styles.createPin}>Enter OTP Code</Text>
           <Text numberOfLines={2} style={styles.subCreatePinTitle}>
-            Enter your 6 digits PIN for confirmation to continue transferring
-            money.
+            Enter 6 digits OTP for confirmation reset password.
           </Text>
           <Text style={{alignSelf: 'center', color: 'red', fontSize: 20}}>
-            {isPinTrue ? null : 'INCORECT PIN!'}
+            {error ? 'INCORRECT OTP!' : null}
           </Text>
-          {isAddPending ? (
+          {isOTPPending ? (
             <ActivityIndicator animating size="large" color="#6379F4" />
           ) : null}
           <View
@@ -85,7 +84,7 @@ const ContentInput = (props) => {
                 placeholder="_"
                 restrictToNumbers
                 cellStyle={{
-                  borderColor: Number(pin).toString()[5]
+                  borderColor: Number(otp).toString()[5]
                     ? '#6379F4'
                     : 'rgba(169, 169, 169, 0.6)',
                   borderWidth: 1,
@@ -100,12 +99,12 @@ const ContentInput = (props) => {
                 textStyleFocused={{color: 'black', fontSize: 20}}
                 cellSize={50}
                 codeLength={6}
-                value={pin}
-                onTextChange={(pin) => {
-                  setPin(pin);
+                value={otp}
+                onTextChange={(otp) => {
+                  setOtp(otp);
                 }}
-                onFulfill={(pin) => {
-                  checkPin(pin);
+                onFulfill={(otp) => {
+                  checkPin(otp);
                 }}
               />
             </View>
@@ -113,7 +112,7 @@ const ContentInput = (props) => {
         </View>
       </Content>
 
-      <View>
+      {/* <View>
         <Button
           disabled={Number(pin).toString()[5] && isPinTrue ? false : true}
           onPress={() => {
@@ -133,15 +132,15 @@ const ContentInput = (props) => {
               width: '100%',
               textAlign: 'center',
             }}>
-            Transfer Now
+            Continue
           </Text>
         </Button>
-      </View>
+      </View> */}
     </>
   );
 };
 
-export default ContentInput;
+export default InputOTP;
 
 const styles = StyleSheet.create({
   containerTitle: {

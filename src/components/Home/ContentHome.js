@@ -1,160 +1,103 @@
 import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {
-  Image,
-  View,
-  FlatList,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native';
-import {
-  Container,
-  Title,
-  Button,
-  Text,
-  Left,
-  Right,
-  Body,
-  Thumbnail,
-  Content,
-  Header,
-  Card,
-  CardItem,
-  Input,
-} from 'native-base';
+import {View, FlatList, TouchableOpacity, StyleSheet} from 'react-native';
+import {Text, Thumbnail} from 'native-base';
 import {Icon} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
-import {getTransactionAPICreator} from '../../redux/actions/transaction';
+import {
+  getTransactionAPICreator,
+  setResetCreator,
+  getTransactionAPICreator_Home,
+} from '../../redux/actions/transaction';
+import {serverAddress} from '../../../sharedVariable';
 
 const ContentHome = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const {dataLogin} = useSelector((state) => state.authAPI);
-  const {transaction} = useSelector((state) => state.transaction);
+  const {transaction, isGetPending} = useSelector((state) => state.transaction);
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
+      // dispatch(setResetCreator());
       dispatch(
-        getTransactionAPICreator(
+        getTransactionAPICreator_Home(
           Number(dataLogin.user_id),
-          'id_transaction',
+          'date',
           'DESC',
           1,
           10,
         ),
       );
     });
-
     return unsubscribe;
-  }, [navigation]);
+  }, [navigation, dispatch]);
   function formatRupiah(num) {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   }
-  return (
-    <>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-evenly',
-          paddingVertical: 20,
-        }}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('Contact')}
-          style={{
-            flexDirection: 'row',
-            width: '45%',
-            backgroundColor: '#E5E8ED',
-            height: 57,
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderRadius: 10,
-          }}>
-          <Icon name="arrow-up" type="feather" color="#6379F4" size={19} />
-          <Text style={{marginLeft: 10, fontSize: 18}}>Transfer</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{
-            flexDirection: 'row',
-            width: '45%',
-            backgroundColor: '#E5E8ED',
-            height: 57,
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderRadius: 10,
-          }}>
-          <Icon name="add" type="material" color="#6379F4" size={19} />
-          <Text style={{marginLeft: 10, fontSize: 18}}>Top Up</Text>
-        </TouchableOpacity>
-      </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          width: '90%',
-          alignSelf: 'center',
-          paddingBottom: 10,
-        }}>
-        <Text style={{fontSize: 18, color: '#514F5B', fontWeight: 'bold'}}>
-          Transaction History
-        </Text>
-        <Text
-          style={{color: '#6379F4', fontSize: 15}}
-          onPress={() => navigation.navigate('History')}>
-          See All
-        </Text>
-      </View>
-
-      <FlatList
-        data={transaction}
-        numColumns={1}
-        renderItem={({item}) => (
+  const TransactionEmpty = () => {
+    return (
+      <>
+        {transaction.length ? null : (
           <View
             style={{
-              flex: 1,
-              marginBottom: 15,
-              width: '100%',
-              backgroundColor: '#FFFFFF',
-              flexDirection: 'row',
-              height: 80,
-              justifyContent: 'space-between',
+              justifyContent: 'center',
               alignItems: 'center',
-              borderRadius: 20,
-              shadowColor: 'rgba(0, 0, 0,0.05)',
-              shadowOffset: {
-                width: 5,
-                height: 0,
-              },
-              shadowOpacity: 0.05,
-              shadowRadius: 0,
-              elevation: 2,
             }}>
+            <Text
+              style={{textAlign: 'center', fontSize: 15, color: '#6379F4'}}
+              numberOfLines={2}>
+              {!isGetPending && !transaction.length
+                ? 'Your transaction is still empty...'
+                : null}
+            </Text>
+          </View>
+        )}
+      </>
+    );
+  };
+  return (
+    <>
+      <View>
+        <View style={styles.transtop}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Contact')}
+            style={styles.transfer}>
+            <Icon name="arrow-up" type="feather" color="#6379F4" size={19} />
+            <Text style={{marginLeft: 10, fontSize: 18}}>Transfer</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.topup}>
+            <Icon name="add" type="material" color="#6379F4" size={19} />
+            <Text style={{marginLeft: 10, fontSize: 18}}>Top Up</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.containerToHistory}>
+          <Text style={{fontSize: 18, color: '#514F5B', fontWeight: 'bold'}}>
+            Transaction History
+          </Text>
+          <Text
+            style={{color: '#6379F4', fontSize: 16}}
+            onPress={() => navigation.navigate('History')}>
+            See All
+          </Text>
+        </View>
+      </View>
+      <FlatList
+        style={{paddingTop: 20}}
+        ListEmptyComponent={() => <TransactionEmpty />}
+        data={transaction.filter((item, index) => index < 10)}
+        numColumns={1}
+        renderItem={({item}) => (
+          <View style={styles.containerItem}>
             <View
               style={{
                 width: '25%',
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              {dataLogin.user_id === item.id_sender ? (
-                item.image_receiver ? (
-                  <Thumbnail
-                    source={{
-                      uri: `http://192.168.43.220:8000${item.image_receiver}`,
-                    }}
-                    style={{width: 56, height: 56, borderRadius: 10}}
-                  />
-                ) : (
-                  <View style={styles.containerIcon}>
-                    <Icon
-                      name="person-outline"
-                      size={50}
-                      color="#6379F4"
-                      type="ionicons"
-                    />
-                  </View>
-                )
-              ) : item.image_sender ? (
+              {item.image ? (
                 <Thumbnail
                   source={{
-                    uri: `http://192.168.43.220:8000${item.image_sender}`,
+                    uri: `${serverAddress}${item.image}`,
                   }}
                   style={{width: 56, height: 56, borderRadius: 10}}
                 />
@@ -184,23 +127,10 @@ const ContentHome = () => {
                   marginBottom: 10,
                   fontWeight: 'bold',
                 }}>
-                {dataLogin.user_id === item.id_sender
-                  ? item.name_receiver
-                    ? item.name_receiver
-                    : item.username_receiver
-                    ? item.username_receiver
-                    : 'Anonim'
-                  : item.name_sender
-                  ? item.name_sender
-                  : item.username_sender
-                  ? item.username_sender
-                  : 'Anonim'}
-
-                {/* {item.name} */}
+                {item.name ? item.name : item.username}
               </Text>
               <Text style={{fontSize: 14, color: '#7A7886'}}>
-                {dataLogin.user_id === item.id_sender ? 'Transfer' : 'Transfer'}
-                {/* {item.type_transaction} */}
+                {item.type_transaction}
               </Text>
             </View>
             <View
@@ -222,8 +152,6 @@ const ContentHome = () => {
                 {dataLogin.user_id === item.id_sender
                   ? `-Rp${formatRupiah(Number(item.nominal))}`
                   : `+Rp${formatRupiah(Number(item.nominal))}`}
-                {/* {item.transaction_type === 'Transfer' ? '+' : '-'}
-                Rp. 20.000 */}
               </Text>
             </View>
           </View>
@@ -238,36 +166,55 @@ const ContentHome = () => {
 export default ContentHome;
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'transparent',
+  transtop: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    height: 100,
-    borderBottomStartRadius: 15,
-    borderBottomEndRadius: 15,
-    paddingLeft: 0,
-    paddingRight: 0,
-    shadowColor: 'transparent',
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    shadowOpacity: 0,
-    shadowRadius: 0,
-    elevation: 0,
-    // width: '100%',
+    justifyContent: 'space-evenly',
+    paddingVertical: 20,
   },
-  contentHeader: {
-    backgroundColor: '#6379F4',
-    margin: 0,
-    flex: 1,
-    borderBottomStartRadius: 15,
-    borderBottomEndRadius: 15,
+  transfer: {
+    flexDirection: 'row',
+    width: '45%',
+    backgroundColor: '#E5E8ED',
+    height: 57,
     justifyContent: 'center',
     alignItems: 'center',
+    borderRadius: 10,
+  },
+  topup: {
     flexDirection: 'row',
-    height: '100%',
+    width: '45%',
+    backgroundColor: '#E5E8ED',
+    height: 57,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+  },
+  containerToHistory: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    alignSelf: 'center',
+    paddingBottom: 10,
+    paddingHorizontal: 15,
+  },
+  containerItem: {
+    flex: 1,
+    marginBottom: 15,
+    width: '100%',
+    backgroundColor: '#FFFFFF',
+    flexDirection: 'row',
+    height: 80,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderRadius: 20,
+    shadowColor: 'rgba(0, 0, 0,0.05)',
+    shadowOffset: {
+      width: 5,
+      height: 0,
+    },
+    shadowOpacity: 0.05,
+    shadowRadius: 0,
+    elevation: 2,
   },
   containerImage: {
     flex: 1,
@@ -275,14 +222,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: '100%',
-    // backgroundColor: 'red',
   },
   containerIcon: {
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#EBEEF2',
     borderRadius: 10,
-    // width: '60%',
-    // height: '50%',
   },
 });

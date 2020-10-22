@@ -6,6 +6,7 @@ import {Icon} from 'react-native-elements';
 import {createStackNavigator} from '@react-navigation/stack';
 import Login from '../screens/Login';
 import Register from '../screens/Register';
+import ResetPassword from '../screens/ResetPassword';
 import Home from '../screens/Home';
 import Transfer from '../screens/Transfer';
 import StatusTransfer from '../screens/StatusTransfer';
@@ -21,15 +22,12 @@ import Profile from '../screens/Profile';
 import PersonalInformation from '../screens/PersonalInformation';
 import SplashScreen from '../screens/SplashScreen';
 const Stack = createStackNavigator();
-// import {useSelector} from 'react-redux';
 
 export default function AppRoutes() {
   // const {statusLogin} = useSelector((state) => state.authAPI);
   return (
     <NavigationContainer>
       <Stack.Navigator
-        // initialRouteName="Login"
-        // initialRouteName={statusLogin === 200 ? 'BottomTab' : 'Login'}
         screenOptions={{
           headerStyle: {
             backgroundColor: '#CBE15A',
@@ -70,6 +68,13 @@ export default function AppRoutes() {
         <Stack.Screen
           name="CreateSuccess"
           component={CreateSuccess}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="ResetPassword"
+          component={ResetPassword}
           options={{
             headerShown: false,
           }}
@@ -285,28 +290,21 @@ export default function AppRoutes() {
             },
           }}
         />
-        {/* <Stack.Screen
-          name="AddProduct"
-          component={AddProduct}
-          options={{
-            title: 'Tambah Produk',
-          }}
-        />
-        <Stack.Screen
-          name="EditProduct"
-          component={EditProduct}
-          options={{
-            title: 'Edit Produk',
-          }}
-        />
-        <Stack.Screen
-          name="EditProfile"
-          component={EditProfile}
-          options={{
-            title: 'Perbarui Informasi Akun',
-          }}
-        /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
+
+// export default () => {
+//   const linking = {
+//     prefixes: ['https://mychat.com', 'mychat://'],
+//     config: {
+//       screens: {
+//         Chat: 'feed/:sort',
+//         Profile: 'user',
+//       },
+//     },
+//   };
+//   const prefix = 'zwallet://'
+//   return <AppRoutes uriPrefix={prefix} />
+// }

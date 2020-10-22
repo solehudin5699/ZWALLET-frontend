@@ -1,28 +1,44 @@
 import axios from 'axios';
+import {serverAddress} from '../../sharedVariable';
 
 export const loginAPI = (body) => {
-  return axios.post('http://192.168.43.220:8000/auth/login', body);
+  return axios.post(`${serverAddress}/auth/login`, body);
 };
 export const registrationAPI = (body) => {
-  return axios.post('http://192.168.43.220:8000/auth/registration', body);
+  return axios.post(`${serverAddress}/auth/registration`, body);
 };
 export const getUserInfoAPI = (id) => {
-  return axios.get(`http://192.168.43.220:8000/auth/user/${id}`);
+  return axios.get(`${serverAddress}/auth/user/${id}`);
 };
-export const updateUserAPI = (id, body) => {
-  return axios.patch(`http://192.168.43.220:8000/auth/update/${id}`, body, {
+export const updateUserAPI = (id, body, token) => {
+  return axios.patch(`${serverAddress}/auth/update/${id}`, body, {
     headers: {
+      'x-access-token': `bearer ${token}`,
       'content-type': 'multipart/form-data',
       contentType: false,
       mimeType: 'multipart/form-data',
       'cache-control': 'no-cache',
-      // 'x-access-token': `bearer ${AsyncStorage.getItem('token')}`,
+      accept: 'application/json',
+    },
+  });
+};
+export const resetPasswordAPI = (id, body, token) => {
+  return axios.patch(`${serverAddress}/auth/update/${id}`, body, {
+    headers: {
+      'x-access-token': `bearer ${token}`,
+      'content-type': 'multipart/form-data',
+      contentType: false,
+      mimeType: 'multipart/form-data',
+      'cache-control': 'no-cache',
       accept: 'application/json',
     },
   });
 };
 export const validateTokenAPI = (token) => {
-  return axios.post('http://192.168.43.220:8000/auth/validate', null, {
+  return axios.post(`${serverAddress}/auth/validate`, null, {
     headers: {'x-access-token': `bearer ${token}`},
   });
+};
+export const requestResetPasswordAPI = (data) => {
+  return axios.post(`${serverAddress}/auth/reset`, data);
 };

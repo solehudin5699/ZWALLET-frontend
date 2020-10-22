@@ -11,6 +11,7 @@ import {
   resetStatusUpdateCreator,
 } from '../../redux/actions/auth';
 import ModalConfirm from './ModalConfirm';
+import {serverAddress} from '../../../sharedVariable';
 
 const HeaderProfile = () => {
   const {dataLogin, statusUpdate} = useSelector((state) => state.authAPI);
@@ -48,7 +49,9 @@ const HeaderProfile = () => {
         name: image.fileName,
         size: image.fileSize,
       });
-      dispatch(updateUserAPICreator(Number(dataLogin.user_id), data));
+      dispatch(
+        updateUserAPICreator(Number(dataLogin.user_id), data, dataLogin.token),
+      );
       // dispatch(getUserInfoAPICreator());
     }
   };
@@ -87,7 +90,7 @@ const HeaderProfile = () => {
           ) : dataLogin.image ? (
             <Thumbnail
               source={{
-                uri: `http://192.168.43.220:8000${dataLogin.image}`,
+                uri: `${serverAddress}${dataLogin.image}`,
               }}
               style={{width: 70, height: 70, borderRadius: 10}}
             />
