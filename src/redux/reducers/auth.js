@@ -117,21 +117,34 @@ const authAPIReducer = (prevState = initialState, action) => {
         ...prevState,
         isRegistPending: true,
       };
-    case String(registrationAPICreator.fulfilled):
+    case String(registrationAPICreator.fulfilled): {
+      let statusSuccess;
+      let error;
+      let data;
+      if (Number(action.payload.status) === 200) {
+        statusSuccess = 200;
+        error = undefined;
+        data = action.payload.data;
+      } else if (Number(action.payload.status) === 500) {
+        statusSuccess = 500;
+        error = action.payload.error;
+        data = null;
+      }
       return {
         ...prevState,
-        statusRegist: action.payload.status,
-        dataRegist: action.payload.data,
-        errorRegist: undefined,
+        statusRegist: statusSuccess,
+        dataRegist: data,
+        errorRegist: error,
         isRegistPending: false,
         isRegistFulFilled: true,
         isRegistRejected: false,
       };
+    }
     case String(registrationAPICreator.rejected):
       return {
         ...prevState,
         statusRegist: 500,
-        errorRegist: action.payload,
+        errorRegist: action.payload.error,
         isRegistRejected: true,
         isRegistPending: false,
         isRegistFulFilled: false,

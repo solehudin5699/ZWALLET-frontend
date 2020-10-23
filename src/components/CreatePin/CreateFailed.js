@@ -9,7 +9,7 @@ import {
   resetStatusUpdateCreator,
 } from '../../redux/actions/auth';
 
-const CreateSuccess = () => {
+const CreateFailed = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   useEffect(() => {
@@ -32,17 +32,13 @@ const CreateSuccess = () => {
           <View style={{width: '15%'}}>
             <Icon
               reverse
-              name="check"
+              name="close"
               type="material"
-              color="#1EC15F"
+              color="#FF5B37"
               size={25}
             />
           </View>
-          <Text style={styles.createPin}>PIN Successfully Created</Text>
-          <Text style={{...styles.subCreatePinTitle, width: '90%'}}>
-            Your PIN was successfully created and you can now access all the
-            features in Zwallet. Login to your new account and start exploring!
-          </Text>
+          <Text style={styles.createPin}>Failed Create PIN</Text>
           <View
             style={{
               width: '100%',
@@ -71,7 +67,7 @@ const CreateSuccess = () => {
   );
 };
 
-export default CreateSuccess;
+export default CreateFailed;
 
 const styles = StyleSheet.create({
   containerTitle: {

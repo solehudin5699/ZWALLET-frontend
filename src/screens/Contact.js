@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {Image, View} from 'react-native';
+import React, {useEffect} from 'react';
+import {Image, View, BackHandler} from 'react-native';
 import {
   Container,
   Title,
@@ -17,8 +17,19 @@ import {
 import HeaderContact from '../components/Contact/HeaderContact';
 import ContentContact from '../components/Contact/ContentContact';
 import {Icon} from 'react-native-elements';
+import {useNavigation} from '@react-navigation/native';
 
 const Contact = () => {
+  const navigation = useNavigation();
+  const backAction = () => {
+    navigation.goBack();
+    return true;
+  };
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', backAction);
+    return () =>
+      BackHandler.removeEventListener('hardwareBackPress', backAction);
+  }, []);
   return (
     <Container style={{backgroundColor: 'rgba(99, 121, 244, 0.2)'}}>
       <HeaderContact />

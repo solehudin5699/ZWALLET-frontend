@@ -4,6 +4,12 @@ import {
   validateTokenAPICreator,
   resetStatusTokenCreator,
 } from '../redux/actions/auth';
+import {
+  getContactAPICreator,
+  setKeywordCreator,
+  setResetCreator,
+  setPageCreator,
+} from '../redux/actions/contact';
 import {useSelector, useDispatch} from 'react-redux';
 const SplashScreen = ({navigation}) => {
   const {
@@ -42,6 +48,11 @@ const SplashScreen = ({navigation}) => {
       }, 3000);
     }
   }, [dispatch, statusLogin, statusToken]);
+  useEffect(() => {
+    dispatch(setResetCreator());
+    dispatch(getContactAPICreator('', 'name', 'ASC', 1, 8));
+    dispatch(setPageCreator(1));
+  }, [dispatch]);
   return (
     <>
       <StatusBar backgroundColor="#6379F4" />

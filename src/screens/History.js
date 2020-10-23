@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import {BackHandler} from 'react-native';
 import {Container} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch} from 'react-redux';
@@ -13,7 +14,15 @@ const History = () => {
   const setFilterAll = () => setFilter('all');
   const setFilterIn = () => setFilter('in');
   const setFilterOut = () => setFilter('out');
-
+  const backAction = () => {
+    navigation.goBack();
+    return true;
+  };
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', backAction);
+    return () =>
+      BackHandler.removeEventListener('hardwareBackPress', backAction);
+  }, []);
   return (
     <Container style={{backgroundColor: 'rgba(99, 121, 244, 0.2)'}}>
       <HeaderHistory />

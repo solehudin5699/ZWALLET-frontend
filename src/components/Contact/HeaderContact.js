@@ -17,11 +17,11 @@ const HeaderContact = ({navigation}) => {
     setSearch(key);
   };
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(setResetCreator());
-    dispatch(getContactAPICreator('', 'name', 'ASC', 1, 8));
-    dispatch(setPageCreator(1));
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(setResetCreator());
+  //   dispatch(getContactAPICreator('', 'name', 'ASC', 1, 8));
+  //   dispatch(setPageCreator(1));
+  // }, [dispatch]);
   return (
     <Header
       // span

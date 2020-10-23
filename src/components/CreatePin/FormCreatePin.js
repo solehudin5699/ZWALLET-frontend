@@ -1,27 +1,42 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, Text, View, Dimensions} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  ActivityIndicator,
+} from 'react-native';
 import {Container, Content, Footer, FooterTab, Button} from 'native-base';
 import CreateSuccess from './CreateSuccess';
 import SmoothPinCodeInput from 'react-native-smooth-pincode-input';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector, useDispatch} from 'react-redux';
-import {registrationAPICreator} from '../../redux/actions/auth';
+import {updateUserAPICreator} from '../../redux/actions/auth';
 
 const FormCreatePin = () => {
   const navigation = useNavigation();
   const [pin, setPin] = useState();
+  const [error, setError] = useState(false);
   const dispatch = useDispatch();
-  const {formRegist, statusRegist} = useSelector((state) => state.authAPI);
-  const registration = () => {
-    let body = {...formRegist, pin: Number(pin)};
-    dispatch(registrationAPICreator(body));
-    console.log(body);
+  const {dataRegist, isUpdatePending, statusUpdate} = useSelector(
+    (state) => state.authAPI,
+  );
+  const createPin = () => {
+    let body = new FormData();
+    body.append('pin', pin);
+    dispatch(
+      updateUserAPICreator(Number(dataRegist.user_id), body, dataRegist.token),
+    );
+    // console.log(body);
   };
   useEffect(() => {
-    if (Number(statusRegist) === 200) {
+    if (Number(statusUpdate) === 200) {
       navigation.navigate('CreateSuccess');
+    } else if (Number(statusUpdate) === 500) {
+      setError(true);
+      navigation.navigate('CreateFailed');
     }
-  }, [statusRegist]);
+  }, [statusUpdate]);
   return (
     <>
       <Content>
@@ -35,6 +50,11 @@ const FormCreatePin = () => {
             Create a PIN that’s contain 6 digits number for security purpose in
             Zwallet.
           </Text>
+          {isUpdatePending ? (
+            <View style={{alignItems: 'center', justifyContent: 'center'}}>
+              <ActivityIndicator animating size="large" color="#6379F4" />
+            </View>
+          ) : null}
           <View
             style={{
               width: '100%',
@@ -75,10 +95,9 @@ const FormCreatePin = () => {
           </View>
         </View>
       </Content>
-      {/* <CreateSuccess /> */}
       <View style={{backgroundColor: '#FFFFFF'}}>
         <Button
-          onPress={() => registration()}
+          onPress={() => createPin()}
           style={
             Number(pin).toString()[5]
               ? styles.buttonActive

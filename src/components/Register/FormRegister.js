@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View, Dimensions} from 'react-native';
+import {StyleSheet, Text, View, ActivityIndicator} from 'react-native';
 import {Button} from 'native-base';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
@@ -9,6 +9,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import {
   dataFormRegistCreator,
   registrationAPICreator,
+  resetStatusRegistCreator,
 } from '../../redux/actions/auth';
 
 const SignupSchema = Yup.object().shape({
@@ -24,10 +25,27 @@ const FormRegister = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const [isSecure, setSecure] = useState(true);
+  const [error, setError] = useState(false);
   const handleSecure = () => {
     let secure = !isSecure;
     setSecure(secure);
   };
+  const {isRegistPending, statusRegist, errorRegist} = useSelector(
+    (state) => state.authAPI,
+  );
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      dispatch(resetStatusRegistCreator());
+    });
+    return unsubscribe;
+  }, [navigation, dispatch]);
+  useEffect(() => {
+    if (Number(statusRegist) === 200) {
+      navigation.navigate('CreatePin');
+    } else if (Number(statusRegist) === 500) {
+      setError(true);
+    }
+  }, [statusRegist]);
   return (
     <Formik
       initialValues={{
@@ -43,9 +61,9 @@ const FormRegister = () => {
           password: values.password,
         };
         console.log(values);
-        dispatch(dataFormRegistCreator(body));
-        // dispatch(registrationAPICreator(body))
-        navigation.navigate('CreatePin');
+        // dispatch(dataFormRegistCreator(body));
+        dispatch(registrationAPICreator(body));
+        setError(false)
       }}
       validationSchema={SignupSchema}>
       {({
@@ -62,6 +80,24 @@ const FormRegister = () => {
         // console.log({...errors});
         return (
           <>
+            {isRegistPending ? (
+              <View style={{alignItems: 'center', justifyContent: 'center'}}>
+                <ActivityIndicator animating size="large" color="#6379F4" />
+              </View>
+            ) : null}
+            {error ? (
+              <View
+                style={{
+                  width: '100%',
+                  marginTop: 20,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Text style={{fontSize: 19, color: 'red'}}>
+                  {errorRegist.msg}
+                </Text>
+              </View>
+            ) : null}
             <Input
               inputContainerStyle={{
                 borderBottomColor:

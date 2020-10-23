@@ -14,6 +14,7 @@ import Confirmation from '../screens/Confirmation';
 import Contact from '../screens/Contact';
 import CreatePin from '../screens/CreatePin';
 import CreateSuccess from '../components/CreatePin/CreateSuccess';
+import CreateFailed from '../components/CreatePin/CreateFailed';
 import History from '../screens/History';
 import InputPin from '../screens/InputPin';
 import ChangePassword from '../screens/ChangePassword';
@@ -68,6 +69,13 @@ export default function AppRoutes() {
         <Stack.Screen
           name="CreateSuccess"
           component={CreateSuccess}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="CreateFailed"
+          component={CreateFailed}
           options={{
             headerShown: false,
           }}

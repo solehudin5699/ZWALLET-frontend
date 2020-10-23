@@ -34,6 +34,7 @@ const ContentStatus = (props) => {
   const navigation = useNavigation();
   const {statusAdd} = useSelector((state) => state.transaction);
   const {dataLogin} = useSelector((state) => state.authAPI);
+  const {allowNotif} = useSelector((state) => state.socket);
   const dispatch = useDispatch();
   function formatRupiah(num) {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
@@ -49,18 +50,20 @@ const ContentStatus = (props) => {
   };
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      PushNotification.createChannel(
-        {
-          channelId,
-          channelName: 'transaction notification',
-        },
-        (created) => console.log(`createChannel returned '${created}'`),
-      );
-      if (Number(statusAdd) === 200) {
-        let msg = `Transfer is successfully. `;
-        showLocalNotification('Transfer', msg, channelId);
-      } else if (Number(statusAdd) === 500) {
-        showLocalNotification('Transfer', 'Transfer is failed!', channelId);
+      if (allowNotif) {
+        PushNotification.createChannel(
+          {
+            channelId,
+            channelName: 'transaction notification',
+          },
+          (created) => console.log(`createChannel returned '${created}'`),
+        );
+        if (Number(statusAdd) === 200) {
+          let msg = `Transfer is success. `;
+          showLocalNotification('Transfer', msg, channelId);
+        } else if (Number(statusAdd) === 500) {
+          showLocalNotification('Transfer', 'Transfer is failed!', channelId);
+        }
       }
     });
 

@@ -34,9 +34,7 @@ const ContactEmpty = () => {
         justifyContent: 'center',
         alignItems: 'center',
       }}>
-      {/* {isPending ? null : isRejected ? (
-        <SomethingWrong />
-      ) : (
+      {!isPending && !contact.length ? (
         <>
           <Icon name="search" type="material" color="#FF5B37" size={30} />
           <Text
@@ -45,13 +43,7 @@ const ContactEmpty = () => {
             Sorry, contact with keyword "{keyword}" is not found :(
           </Text>
         </>
-      )} */}
-      <Icon name="search" type="material" color="#FF5B37" size={30} />
-      <Text
-        style={{textAlign: 'center', fontSize: 15, color: '#6379F4'}}
-        numberOfLines={2}>
-        Sorry, contact with keyword "{keyword}" is not found :(
-      </Text>
+      ) : null}
     </View>
   );
 };
@@ -113,17 +105,22 @@ const ContentContact = () => {
   } = useSelector((state) => state.contact);
   const {dataLogin} = useSelector((state) => state.authAPI);
   const dispatch = useDispatch();
-  const renderFooter = () => {
-    if (!isPending) return contactBasedPage.length === 0 ? <EndResult /> : null;
 
+  const renderFooter = () => {
     return (
       <>
-        <ActivityIndicator
-          animating
-          size="large"
-          color="#6379F4"
-          style={{marginTop: 15, marginBottom: 0}}
-        />
+        {contactBasedPage.length ? (
+          <View style={{height: 50}}>
+            <ActivityIndicator
+              animating
+              size="large"
+              color="#6379F4"
+              style={{marginTop: 15, marginBottom: 0}}
+            />
+          </View>
+        ) : contact.length ? (
+          <EndResult />
+        ) : null}
       </>
     );
   };
@@ -220,7 +217,8 @@ const ContentContact = () => {
           onRefresh={() => dataRefresh()}
           refreshing={isPending}
           onEndReached={() => loadMore()}
-          onEndReachedThreshold={0.01}
+          onEndReachedThreshold={0.1}
+          progressViewOffset={-150}
         />
       )}
       {/* )} */}

@@ -25,9 +25,9 @@ import {
 import {Icon} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {logoutCreator} from '../../redux/actions/auth';
-import {resetSocketCreator} from '../../redux/actions/socket';
+import {resetSocketCreator, notifCreator} from '../../redux/actions/socket';
 
 const ContentProfile = () => {
   const navigation = useNavigation();
@@ -42,6 +42,7 @@ const ContentProfile = () => {
       console.error('Error clearing app data.');
     }
   };
+  const {allowNotif} = useSelector((state) => state.socket);
   return (
     <>
       <View style={styles.container}>
@@ -89,8 +90,11 @@ const ContentProfile = () => {
               trackColor={{false: 'rgba(169, 169, 169, 0.4)', true: '#6379F4'}}
               thumbColor={isEnabled ? '#FFFFFF' : '#f4f3f4'}
               ios_backgroundColor="#3e3e3e"
-              onValueChange={() => toggleSwitch()}
-              value={isEnabled}
+              onValueChange={() => {
+                toggleSwitch();
+                dispatch(notifCreator(!allowNotif));
+              }}
+              value={allowNotif}
             />
           </View>
         </View>

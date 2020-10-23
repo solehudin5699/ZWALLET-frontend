@@ -21,8 +21,9 @@ import PushNotification from 'react-native-push-notification';
 import io from 'socket.io-client';
 import {setSocketCreator} from '../redux/actions/socket';
 import {showLocalNotification} from '../components/NotifHandler/NotifHandler';
-import {getTransactionAPICreator} from '../redux/actions/transaction';
+import {getTransactionAPICreator_Home} from '../redux/actions/transaction';
 import {getUserInfoAPICreator} from '../redux/actions/auth';
+import {socketServerAddress} from '../../sharedVariable';
 
 const Home = () => {
   const backAction = () => {
@@ -36,11 +37,11 @@ const Home = () => {
   }, []);
   const channelId = 'transaction-observer';
   const dispatch = useDispatch();
-  const {socket} = useSelector((state) => state.socket);
+  const {socket, allowNotif} = useSelector((state) => state.socket);
   const {dataLogin} = useSelector((state) => state.authAPI);
   useEffect(() => {
     if (socket) return;
-    const newSocket = io('http://192.168.43.220:8001', {
+    const newSocket = io(socketServerAddress, {
       query: {id: dataLogin.user_id},
     });
     dispatch(setSocketCreator(newSocket));
@@ -49,14 +50,14 @@ const Home = () => {
   // subscribe to socket event
   useEffect(() => {
     if (socket == null) {
-      const newSocket = io('http://192.168.43.220:8001', {
+      const newSocket = io(socketServerAddress, {
         query: {id: dataLogin.user_id},
       });
       dispatch(setSocketCreator(newSocket));
     }
     socket?.on('transaction', ({title, message}) => {
       dispatch(
-        getTransactionAPICreator(
+        getTransactionAPICreator_Home(
           Number(dataLogin.user_id),
           'id_transaction',
           'DESC',
@@ -65,14 +66,24 @@ const Home = () => {
         ),
       );
       dispatch(getUserInfoAPICreator(Number(dataLogin.user_id)));
-      PushNotification.createChannel(
-        {
-          channelId,
-          channelName: 'transaction-notification',
-        },
-        (created) => console.log(`createChannel returned '${created}'`),
-      );
-      showLocalNotification(title, message, channelId);
+      // PushNotification.createChannel(
+      //   {
+      //     channelId,
+      //     channelName: 'transaction-notification',
+      //   },
+      //   (created) => console.log(`createChannel returned '${created}'`),
+      // );
+      // showLocalNotification(title, message, channelId);
+      if (allowNotif) {
+        PushNotification.createChannel(
+          {
+            channelId,
+            channelName: 'transaction-notification',
+          },
+          (created) => console.log(`createChannel returned '${created}'`),
+        );
+        showLocalNotification(title, message, channelId);
+      }
     });
 
     return () => {

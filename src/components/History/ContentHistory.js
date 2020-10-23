@@ -29,6 +29,35 @@ const endOfTheMonth = DateTime.local()
   .plus({days: 30})
   .toISODate();
 
+const TransactionEmpty = () => {
+  const {transaction} = useSelector((state) => state.transaction);
+  return (
+    <>
+      {!transaction.length ? (
+        <>
+          <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              flex: 1,
+            }}>
+            <Text
+              style={{
+                textAlign: 'center',
+                fontSize: 20,
+                color: '#6379F4',
+                alignSelf: 'center',
+              }}
+              numberOfLines={1}>
+              Your transaction is still empty...
+            </Text>
+          </View>
+        </>
+      ) : null}
+    </>
+  );
+};
+
 const ContentHistory = (props) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -42,15 +71,15 @@ const ContentHistory = (props) => {
 
   const thisWeek = transaction.filter((item) => {
     return (
-      DateTime.fromISO(item.date.split(' ')[0]).toISODate() >= startOfTheWeek &&
-      DateTime.fromISO(item.date.split(' ')[0]).toISODate() <= endOfTheWeek
+      DateTime.fromISO(item.date.split('T')[0]).toISODate() >= startOfTheWeek &&
+      DateTime.fromISO(item.date.split('T')[0]).toISODate() <= endOfTheWeek
     );
   });
   const thisMonth = transaction.filter((item) => {
     return (
-      DateTime.fromISO(item.date.split(' ')[0]).toISODate() >=
+      DateTime.fromISO(item.date.split('T')[0]).toISODate() >=
         startOfTheMonth &&
-      DateTime.fromISO(item.date.split(' ')[0]).toISODate() <= endOfTheMonth
+      DateTime.fromISO(item.date.split('T')[0]).toISODate() <= endOfTheMonth
     );
   });
   const allTransaction = [
@@ -154,31 +183,39 @@ const ContentHistory = (props) => {
               style={{marginTop: 15, marginBottom: 0}}
             />
           </View>
-        ) : (
+        ) : transaction.length ? (
           <EndResult />
-        )}
+        ) : null}
       </>
     );
   };
-  const TransactionEmpty = () => {
-    return (
-      <>
-        {transaction.length ? null : (
-          <View
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Text
-              style={{textAlign: 'center', fontSize: 15, color: '#6379F4'}}
-              numberOfLines={2}>
-              Your transaction is still empty...
-            </Text>
-          </View>
-        )}
-      </>
-    );
-  };
+  // const TransactionEmpty = () => {
+  //   return (
+  //     <>
+  //       {!transaction.length ? (
+  //         <>
+  //           <View
+  //             style={{
+  //               justifyContent: 'center',
+  //               alignItems: 'center',
+  //               flex: 1,
+  //             }}>
+  //             <Text
+  //               style={{
+  //                 textAlign: 'center',
+  //                 fontSize: 20,
+  //                 color: '#6379F4',
+  //                 alignSelf: 'center',
+  //               }}
+  //               numberOfLines={1}>
+  //               Your transaction is still empty...
+  //             </Text>
+  //           </View>
+  //         </>
+  //       ) : null}
+  //     </>
+  //   );
+  // };
   return (
     <View style={{flex: 1}}>
       {isGetPending && !transaction.length ? (
