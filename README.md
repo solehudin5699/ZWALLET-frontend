@@ -50,14 +50,17 @@ required to have a PIN. Other features include resetting passwords, editing prof
 ## Screenshoot
 
 <div align="center">
-    <img width="250" src="./src/assets/image/screenshoot-1.png">   
-    <img width="250" src="./src/assets/image/screenshoot-2.png">
-    <img width="250" src="./src/assets/image/screenshoot-4.png">
+    <img width="250" src="./src/assets/images/screenshoot-1.png">   
+    <img width="250" src="./src/assets/images/screenshoot-2.png">
+    <img width="250" src="./src/assets/images/screenshoot-4.png">
 </div>
+
 ## Release APK
 
 <a href="http://bit.ly/zwallet-app">
   <img src="https://img.shields.io/badge/Download%20on%20the-Google%20Drive-blue.svg?style=popout&logo=google-drive"/>
 </a>
+
 ## Related Project
+
 - [Zwallet Backend](https://github.com/solehudin5699/ZWALLET-backend.git)
