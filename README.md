@@ -1,5 +1,9 @@
 # Zwallet App
 
+<div align="center">
+    <img width="200" src="./src/assets/images/ic_launcher_round.png">
+</div>
+
 ## Contents
 
 - [Description](#description)
@@ -46,7 +50,7 @@ required to have a PIN. Other features include resetting passwords, editing prof
 4. Before run this, you must installation backend and then run backend
 5. Type `react-native run-android` for run this app. **_Make sure your device is connected with debugging mode_**.
 
-## Screenshoot
+## Screenshoots
 
 <div align="center">
     <img width="250" src="./src/assets/images/screenshoot-1.png">   
