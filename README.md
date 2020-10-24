@@ -6,11 +6,10 @@
 - [Features](#features)
 - [Usage](#usage-application)
 - [Requirements](#requirements)
-- [Installation](#usage-for-development)
+- [Installation](#installation)
 - [Screenshoots](#screenshoots)
 - [Release APK](#release-apk)
-- [Related Project](#related-project-backend)
-- [Contributors](#contributors)
+- [Related Project](#related-project)
 
 ## Description
 
