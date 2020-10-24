@@ -37,7 +37,8 @@ const Home = () => {
   }, []);
   const channelId = 'transaction-observer';
   const dispatch = useDispatch();
-  const {socket, allowNotif} = useSelector((state) => state.socket);
+  const {socket} = useSelector((state) => state.socket);
+  const {allowNotif} = useSelector((state) => state.transaction);
   const {dataLogin} = useSelector((state) => state.authAPI);
   useEffect(() => {
     if (socket) return;

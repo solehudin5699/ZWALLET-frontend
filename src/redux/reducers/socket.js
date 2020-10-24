@@ -1,6 +1,5 @@
 const initialState = {
   socket: null,
-  allowNotif: false,
 };
 
 const socketReducer = (prevState = initialState, action) => {
@@ -14,11 +13,6 @@ const socketReducer = (prevState = initialState, action) => {
       return {
         ...prevState,
         socket: null,
-      };
-    case 'NOTIF':
-      return {
-        ...prevState,
-        allowNotif: action.payload,
       };
     default:
       return prevState;

@@ -9,6 +9,7 @@ import {useNavigation} from '@react-navigation/native';
 import {
   loginAPICreator,
   resetStatusLoginCreator,
+  resetStatusRegistCreator,
 } from '../../redux/actions/auth';
 
 const SigninSchema = Yup.object().shape({
@@ -38,6 +39,12 @@ const FormLogin = () => {
 
     return unsubscribe;
   }, [navigation]);
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      dispatch(resetStatusRegistCreator());
+    });
+    return unsubscribe;
+  }, [navigation, dispatch]);
   useEffect(() => {
     if (Number(statusLogin) === 200 && Number(statusToken) === 200) {
       setTimeout(() => {

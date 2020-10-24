@@ -50,8 +50,6 @@ const InputNewPassword = () => {
           dispatch(
             updateUserAPICreator(Number(dataReq.user_id), data, dataReq.token),
           );
-          // dispatch(dataFormRegistCreator(body));
-          // navigation.navigate('CreatePin');
         }}
         validationSchema={SignupSchema}>
         {({
@@ -168,7 +166,9 @@ const InputNewPassword = () => {
               {statusUpdate === 500 ? (
                 <View style={styles.containerButton}>
                   <Button
-                    onPress={() => navigation.navigate('ResetPassword')}
+                    onPress={() => {
+                      navigation.navigate('ResetPassword');
+                    }}
                     style={styles.buttonActive}>
                     <Text style={{color: '#ffffff', fontSize: 20}}>
                       Try Again

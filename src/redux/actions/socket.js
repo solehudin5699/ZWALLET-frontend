@@ -9,9 +9,3 @@ export const resetSocketCreator = () => {
     type: 'RESETSOCKET',
   };
 };
-export const notifCreator = (logic) => {
-  return {
-    type: 'NOTIF',
-    payload: logic,
-  };
-};

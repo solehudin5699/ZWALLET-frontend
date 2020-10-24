@@ -19,6 +19,8 @@ const initialState = {
   isGetPending: false,
   isGetFulFilled: false,
   isGetRejected: false,
+
+  allowNotif: true,
 };
 
 const transactionReducer = (prevState = initialState, action) => {
@@ -139,11 +141,16 @@ const transactionReducer = (prevState = initialState, action) => {
         isGetPending: false,
         isGetFulFilled: false,
       };
-    case 'RESET':
+    case 'RESETTRANS':
       return {
         ...prevState,
         transaction: [],
         statusAdd: undefined,
+      };
+    case 'NOTIF':
+      return {
+        ...prevState,
+        allowNotif: action.payload,
       };
     default:
       return prevState;

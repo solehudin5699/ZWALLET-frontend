@@ -1,15 +1,11 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {StyleSheet, Text, View, ActivityIndicator} from 'react-native';
 import {Button} from 'native-base';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {Input, Icon} from 'react-native-elements';
-import {useNavigation} from '@react-navigation/native';
 import {useSelector, useDispatch} from 'react-redux';
-import {
-  requestResetAPICreator,
-  resetStatusUpdateCreator,
-} from '../../redux/actions/auth';
+import {requestResetAPICreator} from '../../redux/actions/auth';
 
 const SignupSchema = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Required'),
@@ -19,21 +15,8 @@ const InputEmail = (props) => {
   const {statusReq, isReqPending, dataReq, errorReq} = useSelector(
     (state) => state.authAPI,
   );
-  const [error, setError] = useState(false);
-  const navigation = useNavigation();
   const dispatch = useDispatch();
-  useEffect(() => {
-    if (Number(statusReq) === 500) {
-      setError(true);
-    }
-  }, [statusReq]);
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      dispatch(resetStatusUpdateCreator());
-      setError(false);
-    });
-    return unsubscribe;
-  }, [navigation, dispatch]);
+
   return (
     <>
       <Formik
@@ -49,8 +32,6 @@ const InputEmail = (props) => {
           };
           // console.log(values);
           dispatch(requestResetAPICreator(data));
-          setError(false);
-          // console.log(body);
         }}
         validationSchema={SignupSchema}>
         {({
@@ -98,7 +79,7 @@ const InputEmail = (props) => {
                 <ActivityIndicator animating size="large" color="#6379F4" />
               ) : null}
               <Text style={{alignSelf: 'center', color: 'red', fontSize: 15}}>
-                {error
+                {Number(statusReq) === 500 && !isReqPending
                   ? errorReq
                     ? errorReq.msg
                     : 'Something is wrong'

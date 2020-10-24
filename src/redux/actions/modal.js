@@ -7,7 +7,7 @@ export const modalEditImageProfileAction = (value) => {
 
 export const modalSignOutAction = (value) => {
   return {
-    type: 'SIGNOUT',
+    type: 'SIGNOUTMODAL',
     payload: value,
   };
 };

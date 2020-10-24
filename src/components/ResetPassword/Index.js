@@ -42,7 +42,12 @@ const Index = () => {
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       dispatch(resetStatusUpdateCreator());
-      // setError(false);
+    });
+    return unsubscribe;
+  }, [navigation, dispatch]);
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('blur', () => {
+      dispatch(resetStatusUpdateCreator());
     });
     return unsubscribe;
   }, [navigation, dispatch]);

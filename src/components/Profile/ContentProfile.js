@@ -27,7 +27,8 @@ import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
 import {logoutCreator} from '../../redux/actions/auth';
-import {resetSocketCreator, notifCreator} from '../../redux/actions/socket';
+import {resetSocketCreator} from '../../redux/actions/socket';
+import {notifCreator} from '../../redux/actions/transaction';
 
 const ContentProfile = () => {
   const navigation = useNavigation();
@@ -42,7 +43,7 @@ const ContentProfile = () => {
       console.error('Error clearing app data.');
     }
   };
-  const {allowNotif} = useSelector((state) => state.socket);
+  const {allowNotif} = useSelector((state) => state.transaction);
   return (
     <>
       <View style={styles.container}>

@@ -7,7 +7,6 @@ import {Input, Icon} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector, useDispatch} from 'react-redux';
 import {
-  dataFormRegistCreator,
   registrationAPICreator,
   resetStatusRegistCreator,
 } from '../../redux/actions/auth';
@@ -63,7 +62,6 @@ const FormRegister = () => {
         console.log(values);
         // dispatch(dataFormRegistCreator(body));
         dispatch(registrationAPICreator(body));
-        setError(false)
       }}
       validationSchema={SignupSchema}>
       {({
@@ -85,19 +83,23 @@ const FormRegister = () => {
                 <ActivityIndicator animating size="large" color="#6379F4" />
               </View>
             ) : null}
-            {error ? (
-              <View
-                style={{
-                  width: '100%',
-                  marginTop: 20,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <Text style={{fontSize: 19, color: 'red'}}>
-                  {errorRegist.msg}
-                </Text>
-              </View>
-            ) : null}
+            {/* {Number(statusRegist) === 500 && !isRegistPending ? ( */}
+            <View
+              style={{
+                width: '100%',
+                marginTop: 20,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Text style={{fontSize: 19, color: 'red'}}>
+                {Number(statusRegist) === 500 && !isRegistPending
+                  ? errorRegist
+                    ? errorRegist.msg
+                    : 'Something is wrong'
+                  : null}
+              </Text>
+            </View>
+            {/* ) : null} */}
             <Input
               inputContainerStyle={{
                 borderBottomColor:
@@ -212,7 +214,7 @@ const FormRegister = () => {
                 lineHeight: 23,
                 fontSize: 16,
               }}>
-              ALready have an account? Let's{' '}
+              Already have an account? Let's{' '}
               <Text
                 style={{color: '#6379F4'}}
                 onPress={() => navigation.navigate('Login')}>

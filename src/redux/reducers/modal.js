@@ -11,7 +11,7 @@ const modalReducer = (prevState = initialState, action) => {
         modalEditImageProfile: action.payload,
       };
 
-    case 'SIGNOUT':
+    case 'SIGNOUTMODAL':
       return {
         ...prevState,
         modalSignOut: action.payload,

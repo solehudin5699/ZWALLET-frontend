@@ -27,6 +27,12 @@ export const getTransactionAPICreator_Home = createAsyncAction(
 );
 export const setResetCreator = () => {
   return {
-    type: 'RESET',
+    type: 'RESETTRANS',
+  };
+};
+export const notifCreator = (logic) => {
+  return {
+    type: 'NOTIF',
+    payload: logic,
   };
 };
