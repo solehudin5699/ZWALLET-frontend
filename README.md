@@ -46,16 +46,30 @@ required to have a PIN. Other features include resetting passwords, editing prof
 
 1. Open your terminal or command prompt
 2. Type `git clone https://github.com/solehudin5699/ZWALLET-frontend.git`
-3. Open the folder and type `npm install` for install dependencies`
-4. Before run this, you must installation backend and then run backend
-5. Type `react-native run-android` for run this app. **_Make sure your device is connected with debugging mode_**.
+3. Open the folder and type `npm install` for install dependencies
+4. Create file titled **_sharedVariable.js_** in root folder with the following contents :
+
+```javascript
+export const serverAddress = 'server_address_for_backend';
+export const socketServerAddress = 'server_address_for_socket';
+```
+
+Example :
+
+```javascript
+export const serverAddress = 'http://localhost:8000';
+export const socketServerAddress = 'http://localhost:8001';
+```
+
+5. Before run this, you must installation backend and then run backend
+6. Type `react-native run-android` in terminal for run this app. **_Make sure your device is connected with debugging mode_**.
 
 ## Screenshoots
 
 <div align="center">
     <img width="250" src="./src/assets/images/screenshoot-1.png">   
     <img width="250" src="./src/assets/images/screenshoot-2.png">
-    <img width="250" src="./src/assets/images/screenshoot-4.png">
+    <img width="250" src="./src/assets/images/screenshoot-3.png">
 </div>
 
 ## Release APK
