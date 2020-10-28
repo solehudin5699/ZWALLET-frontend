@@ -9,8 +9,8 @@
 - [Description](#description)
 - [Features](#features)
 - [Usage](#usage-application)
-- [Requirements](#requirements)
-- [Installation](#installation)
+- [Requirements](#requirements-for-development)
+- [Installation](#installation-for-development)
 - [Screenshoots](#screenshoots)
 - [Release APK](#release-apk)
 - [Related Project](#related-project)
@@ -35,14 +35,15 @@ required to have a PIN. Other features include resetting passwords, editing prof
 - Register new account, then login with your new account
 - If you can log in, you can use the feature
 
-## Requirements
+## Requirements for Development
 
+- [`Node Js`](https://nodejs.org/en/)
 - [`npm`](https://www.npmjs.com/get-npm)
 - [`react-native`](https://facebook.github.io/react-native/docs/getting-started)
 - [`react-native-cli`](https://facebook.github.io/react-native/docs/getting-started)
 - [`Zwallet Backend`](https://github.com/solehudin5699/ZWALLET-backend.git)
 
-## Installation
+## Installation for Development
 
 1. Open your terminal or command prompt
 2. Type `git clone https://github.com/solehudin5699/ZWALLET-frontend.git`
@@ -74,7 +75,7 @@ export const socketServerAddress = 'http://localhost:8001';
 
 ## Release APK
 
-<a href="http://bit.ly/zwallet-app">
+<a href="http://bit.ly/zwallet_app">
   <img src="https://img.shields.io/badge/Download%20on%20the-Google%20Drive-blue.svg?style=popout&logo=google-drive"/>
 </a>
 
