@@ -114,7 +114,7 @@ const ModalLogout = (props) => {
               height: 30,
               borderRadius: 10,
             }}>
-            <Text style={{fontSize: 15, color: '#4D4B57'}}>OK</Text>
+            <Text style={{fontSize: 15, color: '#4D4B57'}}>YES</Text>
           </Button>
         </View>
       </View>

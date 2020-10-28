@@ -13,8 +13,12 @@ import {
 
 const SignupSchema = Yup.object().shape({
   username: Yup.string()
-    .min(4, 'Minimun length of 4')
-    .max(12, 'Max length of 12')
+    .matches(
+      /^([a-z0-9]|_){0,}$/,
+      'Only lowercase, number and underscore are allowed',
+    )
+    .min(4, 'Minimun length of 4 characters')
+    .max(12, 'Max length of 12 characters')
     .required('Required'),
   email: Yup.string().email('Invalid email').required('Required'),
   password: Yup.string().min(8, 'Minimun length of 8').required('Required'),
@@ -56,7 +60,7 @@ const FormRegister = () => {
       onSubmit={(values) => {
         let body = {
           username: values.username,
-          email: values.email,
+          email: values.email.toLowerCase(),
           password: values.password,
         };
         console.log(values);
