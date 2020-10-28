@@ -1,49 +1,24 @@
 import React, {useState} from 'react';
-import {
-  Image,
-  View,
-  FlatList,
-  TouchableOpacity,
-  StyleSheet,
-  Switch,
-  Pressable,
-} from 'react-native';
-import {
-  Container,
-  Title,
-  Button,
-  Text,
-  Left,
-  Right,
-  Body,
-  Thumbnail,
-  Content,
-  Header,
-  Card,
-  CardItem,
-} from 'native-base';
+import {View, StyleSheet, Switch, Pressable, Text} from 'react-native';
 import {Icon} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
-import AsyncStorage from '@react-native-community/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
-import {logoutCreator} from '../../redux/actions/auth';
-import {resetSocketCreator} from '../../redux/actions/socket';
 import {notifCreator} from '../../redux/actions/transaction';
+import ModalLogout from './ModalLogout';
 
 const ContentProfile = () => {
   const navigation = useNavigation();
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
   const dispatch = useDispatch();
-  const clearAppData = async function () {
-    try {
-      const keys = await AsyncStorage.getAllKeys();
-      await AsyncStorage.multiRemove(keys);
-    } catch (error) {
-      console.error('Error clearing app data.');
-    }
-  };
   const {allowNotif} = useSelector((state) => state.transaction);
+  const [modal, setModal] = useState(false);
+  const handleCloseModal = () => {
+    setModal(false);
+  };
+  const handleShowModal = () => {
+    setModal(true);
+  };
   return (
     <>
       <View style={styles.container}>
@@ -102,17 +77,7 @@ const ContentProfile = () => {
         {/* Logout */}
         <Pressable
           onPress={() => {
-            dispatch(logoutCreator());
-            navigation.reset({
-              index: 0,
-              routes: [
-                {
-                  name: 'Login',
-                },
-              ],
-            });
-            clearAppData();
-            dispatch(resetSocketCreator());
+            handleShowModal();
           }}
           style={styles.itemInformation}>
           <View style={{...styles.containerTitle, width: '100%'}}>
@@ -120,6 +85,7 @@ const ContentProfile = () => {
           </View>
         </Pressable>
       </View>
+      <ModalLogout isShow={modal} handleCloseModal={handleCloseModal} />
     </>
   );
 };

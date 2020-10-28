@@ -1,13 +1,29 @@
 import React from 'react';
 import {Text, View, Dimensions} from 'react-native';
 import {Button} from 'native-base';
+import {useNavigation} from '@react-navigation/native';
+import {logoutCreator} from '../../redux/actions/auth';
+import {resetSocketCreator} from '../../redux/actions/socket';
+import {useDispatch, useSelector} from 'react-redux';
+import AsyncStorage from '@react-native-community/async-storage';
+
 import Modal from 'react-native-modal';
 
 const window = Dimensions.get('window');
 const width = window.width * window.scale;
 const height = window.height * window.scale;
 
-const ModalConfirm = (props) => {
+const ModalLogout = (props) => {
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const clearAppData = async function () {
+    try {
+      const keys = await AsyncStorage.getAllKeys();
+      await AsyncStorage.multiRemove(keys);
+    } catch (error) {
+      console.error('Error clearing app data.');
+    }
+  };
   return (
     <Modal
       animationIn="slideInUp"
@@ -24,13 +40,13 @@ const ModalConfirm = (props) => {
       }}
       backdropOpacity={0.3}
       onBackButtonPress={() => {
-        props.closeModal();
+        props.handleCloseModal();
       }}
       onBackdropPress={() => {
-        props.closeModal();
+        props.handleCloseModal();
       }}
       onSwipeComplete={() => {
-        props.closeModal();
+        props.handleCloseModal();
       }}
       swipeDirection="down"
       // propagateSwipe
@@ -51,7 +67,7 @@ const ModalConfirm = (props) => {
               fontSize: 18,
               color: '#6379F4',
             }}>
-            OTP code has been sent to your email, please check it!
+            Are you sure to logout?
           </Text>
         </View>
         <View
@@ -64,7 +80,32 @@ const ModalConfirm = (props) => {
           <Button
             transparent
             onPress={() => {
-              props.closeModal();
+              props.handleCloseModal();
+            }}
+            style={{
+              width: '20%',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: 30,
+              borderRadius: 10,
+            }}>
+            <Text style={{fontSize: 15, color: '#4D4B57'}}>CANCEL</Text>
+          </Button>
+          <Button
+            transparent
+            onPress={() => {
+              props.handleCloseModal();
+              dispatch(logoutCreator());
+              navigation.reset({
+                index: 0,
+                routes: [
+                  {
+                    name: 'Login',
+                  },
+                ],
+              });
+              dispatch(resetSocketCreator());
+              clearAppData();
             }}
             style={{
               width: '20%',
@@ -81,4 +122,4 @@ const ModalConfirm = (props) => {
   );
 };
 
-export default ModalConfirm;
+export default ModalLogout;
