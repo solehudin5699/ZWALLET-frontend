@@ -32,9 +32,8 @@ import {serverAddress} from '../../../sharedVariable';
 const ContentStatus = (props) => {
   const channelId = 'status-transfer';
   const navigation = useNavigation();
-  const {statusAdd} = useSelector((state) => state.transaction);
+  const {statusAdd, allowNotif} = useSelector((state) => state.transaction);
   const {dataLogin} = useSelector((state) => state.authAPI);
-  const {allowNotif} = useSelector((state) => state.socket);
   const dispatch = useDispatch();
   function formatRupiah(num) {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
