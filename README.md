@@ -1,7 +1,7 @@
 # Zwallet App <img src="https://img.shields.io/badge/Build%20with-React%20Native-61dbfb?style=popout&logo=react">
 
 <div align="center">
-    <img width="200" src="./src/assets/images/ic_launcher_round.png">
+    <img width="250" src="./src/assets/images/ic_launcher_round.png">
 </div>
 
 ## Contents
@@ -31,7 +31,7 @@ required to have a PIN. Other features include resetting passwords, editing prof
 
 ## Usage Application
 
-- [`Download`](#release-apk) and install the app in your device
+- [`Download`](#release-apk) and install the app in your android device
 - Register new account, then login with your new account
 - If you can log in, you can use the feature
 
@@ -83,7 +83,7 @@ Download this apk release for getting experience with this app.
 
 ## Related Project
 
-Restfull API for this application, clone this for development Zwallet App.
+RESTful API for this application, clone this for development Zwallet App.
 
 <a href="https://github.com/solehudin5699/ZWALLET-backend.git">
 <img src="https://img.shields.io/badge/Zwallet%20Backend-Repository-blue.svg?style=popout&logo=github"/>
