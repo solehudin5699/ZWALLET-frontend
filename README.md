@@ -1,4 +1,4 @@
-# Zwallet App
+# Zwallet App <img src="https://img.shields.io/badge/Build%20with-React%20Native-61dbfb?style=popout&logo=react">
 
 <div align="center">
     <img width="200" src="./src/assets/images/ic_launcher_round.png">
@@ -75,10 +75,16 @@ export const socketServerAddress = 'http://localhost:8001';
 
 ## Release APK
 
+Download this apk release for getting experience with this app.
+
 <a href="http://bit.ly/zwallet_app">
   <img src="https://img.shields.io/badge/Download%20on%20the-Google%20Drive-blue.svg?style=popout&logo=google-drive"/>
 </a>
 
 ## Related Project
 
-- [Zwallet Backend](https://github.com/solehudin5699/ZWALLET-backend.git)
+Restfull API for this application, clone this for development Zwallet App.
+
+<a href="https://github.com/solehudin5699/ZWALLET-backend.git">
+<img src="https://img.shields.io/badge/Zwallet%20Backend-Repository-blue.svg?style=popout&logo=github"/>
+</a>
