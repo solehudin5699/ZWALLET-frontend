@@ -230,7 +230,6 @@ const styles = StyleSheet.create({
     height: 50,
     justifyContent: 'center',
     alignItems: 'center',
-    fontWeight: 'bold',
   },
   buttonInactive: {
     width: '95%',
@@ -239,6 +238,5 @@ const styles = StyleSheet.create({
     height: 50,
     justifyContent: 'center',
     alignItems: 'center',
-    fontWeight: 'bold',
   },
 });

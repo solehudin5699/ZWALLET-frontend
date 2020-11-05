@@ -8,9 +8,20 @@ import {
   BackHandler,
   Dimensions,
 } from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import {Container, Content} from 'native-base';
 import FormRegister from '../components/Register/FormRegister';
 const Register = () => {
+  const navigation = useNavigation();
+  const backAction = () => {
+    navigation.goBack();
+    return true;
+  };
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', backAction);
+    return () =>
+      BackHandler.removeEventListener('hardwareBackPress', backAction);
+  }, []);
   return (
     <Container
       style={{
