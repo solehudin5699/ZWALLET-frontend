@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {useEffect} from 'react';
 import {
   ActivityIndicator,
   View,
@@ -14,6 +14,7 @@ import {
   getContactAPICreator,
   setResetCreator,
   setPageCreator,
+  setKeywordCreator,
 } from '../../redux/actions/contact';
 import {serverAddress} from '../../../sharedVariable';
 
@@ -40,7 +41,7 @@ const ContactEmpty = () => {
           <Text
             style={{textAlign: 'center', fontSize: 15, color: '#6379F4'}}
             numberOfLines={2}>
-            Sorry, contact with keyword "{keyword}" is not found :(
+            Sorry, contact with keyword "{keyword}" is not found
           </Text>
         </>
       ) : null}
@@ -127,23 +128,32 @@ const ContentContact = () => {
   const dataRefresh = () => {
     dispatch(setResetCreator());
     dispatch(setPageCreator(1));
-    dispatch(getContactAPICreator('', 'name', 'ASC', 1, 8));
+    dispatch(getContactAPICreator('', 'name', 'ASC', 1, 15));
   };
   const loadMore = () => {
     if (contactBasedPage.length === 0) {
       return null;
     } else {
       dispatch(
-        getContactAPICreator(keyword, 'name', 'ASC', Number(page) + 1, 8),
+        getContactAPICreator(keyword, 'name', 'ASC', Number(page) + 1, 15),
       );
       if (isFulFilled) {
         let newPage = Number(page) + 1;
         dispatch(setPageCreator(newPage));
       }
     }
-
-    console.log(page);
+    // console.log(page);
   };
+  useEffect(() => {
+    dispatch(setKeywordCreator(''));
+    const unsubscribe = navigation.addListener('blur', () => {
+      if (contact.length === 0 && keyword) {
+        dispatch(getContactAPICreator('', 'name', 'ASC', 1, 15));
+        dispatch(setPageCreator(1));
+      }
+    });
+    return unsubscribe;
+  }, [navigation, keyword]);
   return (
     <>
       <View style={styles.container}>
@@ -245,7 +255,7 @@ const styles = StyleSheet.create({
   },
   itemFlatlist: {
     flex: 1,
-    marginBottom: 15,
+    marginBottom: 10,
     width: '100%',
     backgroundColor: '#FFFFFF',
     flexDirection: 'row',

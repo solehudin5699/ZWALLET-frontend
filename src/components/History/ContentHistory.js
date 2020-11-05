@@ -19,21 +19,17 @@ import {
 import {serverAddress} from '../../../sharedVariable';
 
 const startOfTheWeek = DateTime.local().startOf('week').toISODate();
-const endOfTheWeek = DateTime.local()
-  .startOf('week')
-  .plus({days: 7})
-  .toISODate();
+const endOfTheWeek = DateTime.local().endOf('week').toISODate();
 const startOfTheMonth = DateTime.local().startOf('month').toISODate();
-const endOfTheMonth = DateTime.local()
-  .startOf('month')
-  .plus({days: 30})
-  .toISODate();
+// const endOfTheMonth = DateTime.local().endOf('month').toISODate();
+const startOfTheYear = DateTime.local().startOf('year').toISODate();
+// const endOfTheYear = DateTime.local().endOf('year').toISODate();
 
 const TransactionEmpty = () => {
   const {transaction} = useSelector((state) => state.transaction);
   return (
     <>
-      {!transaction.length ? (
+      {transaction.length === 0 ? (
         <>
           <View
             style={{
@@ -44,7 +40,7 @@ const TransactionEmpty = () => {
             <Text
               style={{
                 textAlign: 'center',
-                fontSize: 20,
+                fontSize: 16,
                 color: '#6379F4',
                 alignSelf: 'center',
               }}
@@ -79,7 +75,18 @@ const ContentHistory = (props) => {
     return (
       DateTime.fromISO(item.date.split('T')[0]).toISODate() >=
         startOfTheMonth &&
-      DateTime.fromISO(item.date.split('T')[0]).toISODate() <= endOfTheMonth
+      DateTime.fromISO(item.date.split('T')[0]).toISODate() < startOfTheWeek
+    );
+  });
+  const thisYear = transaction.filter((item) => {
+    return (
+      DateTime.fromISO(item.date.split('T')[0]).toISODate() >= startOfTheYear &&
+      DateTime.fromISO(item.date.split('T')[0]).toISODate() < startOfTheMonth
+    );
+  });
+  const olderTransaction = transaction.filter((item) => {
+    return (
+      DateTime.fromISO(item.date.split('T')[0]).toISODate() < startOfTheYear
     );
   });
   const allTransaction = [
@@ -91,6 +98,14 @@ const ContentHistory = (props) => {
       period: 'This Month',
       data: thisMonth,
     },
+    {
+      period: 'This Year',
+      data: thisYear,
+    },
+    {
+      period: 'Old Transaction',
+      data: olderTransaction,
+    },
   ];
   const transactionIn = [
     {
@@ -101,6 +116,16 @@ const ContentHistory = (props) => {
       period: 'This Month',
       data: thisMonth.filter((item) => item.id_receiver === dataLogin.user_id),
     },
+    {
+      period: 'This Year',
+      data: thisYear.filter((item) => item.id_receiver === dataLogin.user_id),
+    },
+    {
+      period: 'Old Transaction',
+      data: olderTransaction.filter(
+        (item) => item.id_receiver === dataLogin.user_id,
+      ),
+    },
   ];
   const transactionOut = [
     {
@@ -110,6 +135,16 @@ const ContentHistory = (props) => {
     {
       period: 'This Month',
       data: thisMonth.filter((item) => item.id_sender === dataLogin.user_id),
+    },
+    {
+      period: 'This Year',
+      data: thisYear.filter((item) => item.id_sender === dataLogin.user_id),
+    },
+    {
+      period: 'Old Transaction',
+      data: olderTransaction.filter(
+        (item) => item.id_sender === dataLogin.user_id,
+      ),
     },
   ];
   function formatRupiah(num) {
@@ -126,7 +161,7 @@ const ContentHistory = (props) => {
         'date',
         'DESC',
         1,
-        10,
+        20,
       ),
     );
   };
@@ -141,7 +176,7 @@ const ContentHistory = (props) => {
           'date',
           'DESC',
           page + 1,
-          10,
+          20,
         ),
       );
       if (isGetFulFilled) {
@@ -155,7 +190,9 @@ const ContentHistory = (props) => {
   const EndResult = () => {
     return (
       <View style={{alignItems: 'center', paddingVertical: 10}}>
-        <Text style={{color: '#517fa4'}}>Finish...</Text>
+        <Text style={{color: '#517fa4'}}>
+          {transaction.length > 6 ? 'Finish...' : null}
+        </Text>
       </View>
     );
   };
@@ -174,7 +211,7 @@ const ContentHistory = (props) => {
   const renderFooter = () => {
     return (
       <>
-        {transactionBasedPage.length ? (
+        {transactionBasedPage.length && transaction.length > 6 ? (
           <View style={{height: 50}}>
             <ActivityIndicator
               animating
@@ -189,43 +226,22 @@ const ContentHistory = (props) => {
       </>
     );
   };
-  // const TransactionEmpty = () => {
-  //   return (
-  //     <>
-  //       {!transaction.length ? (
-  //         <>
-  //           <View
-  //             style={{
-  //               justifyContent: 'center',
-  //               alignItems: 'center',
-  //               flex: 1,
-  //             }}>
-  //             <Text
-  //               style={{
-  //                 textAlign: 'center',
-  //                 fontSize: 20,
-  //                 color: '#6379F4',
-  //                 alignSelf: 'center',
-  //               }}
-  //               numberOfLines={1}>
-  //               Your transaction is still empty...
-  //             </Text>
-  //           </View>
-  //         </>
-  //       ) : null}
-  //     </>
-  //   );
-  // };
+
   return (
     <View style={{flex: 1}}>
-      {isGetPending && !transaction.length ? (
-        <ActivityIndicator
-          animating
-          size="large"
-          color="#6379F4"
-          style={{marginTop: 15, marginBottom: 0}}
-        />
+      {!transaction.length ? (
+        isGetPending ? (
+          <ActivityIndicator
+            animating
+            size="large"
+            color="#6379F4"
+            style={{marginTop: 15, marginBottom: 0}}
+          />
+        ) : (
+          <TransactionEmpty />
+        )
       ) : (
+        // <TransactionEmpty />
         <SectionList
           sections={allTransaction}
           sections={
@@ -235,7 +251,6 @@ const ContentHistory = (props) => {
               ? transactionIn
               : transactionOut
           }
-          ListEmptyComponent={() => <TransactionEmpty />}
           keyExtractor={(item) => Math.random().toString()}
           renderSectionHeader={({section: {period, data}}) =>
             !data.length ? null : (
@@ -320,7 +335,7 @@ const styles = StyleSheet.create({
   },
   containerItem: {
     flex: 1,
-    marginBottom: 15,
+    marginBottom: 10,
     width: '100%',
     backgroundColor: '#FFFFFF',
     flexDirection: 'row',

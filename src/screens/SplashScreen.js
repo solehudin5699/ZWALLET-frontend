@@ -50,7 +50,7 @@ const SplashScreen = ({navigation}) => {
   }, [dispatch, statusLogin, statusToken]);
   useEffect(() => {
     dispatch(setResetCreator());
-    dispatch(getContactAPICreator('', 'name', 'ASC', 1, 8));
+    dispatch(getContactAPICreator('', 'name', 'ASC', 1, 15));
     dispatch(setPageCreator(1));
   }, [dispatch]);
   return (

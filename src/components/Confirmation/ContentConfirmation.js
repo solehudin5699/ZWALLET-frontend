@@ -156,7 +156,7 @@ export default ContentConfirmation;
 const styles = StyleSheet.create({
   itemDetail: {
     flex: 1,
-    marginBottom: 15,
+    marginBottom: 10,
     width: '100%',
     backgroundColor: '#FFFFFF',
     height: 70,

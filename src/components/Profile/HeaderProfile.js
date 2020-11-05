@@ -49,6 +49,11 @@ const HeaderProfile = () => {
         name: image.fileName,
         size: image.fileSize,
       });
+      if(dataLogin.image){
+        data.append("imageDelete", dataLogin.image)
+      } else {
+        data.append("imageDelete", "")
+      }
       dispatch(
         updateUserAPICreator(Number(dataLogin.user_id), data, dataLogin.token),
       );

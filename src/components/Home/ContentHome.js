@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
   },
   containerItem: {
     flex: 1,
-    marginBottom: 15,
+    marginBottom: 10,
     width: '100%',
     backgroundColor: '#FFFFFF',
     flexDirection: 'row',

@@ -307,7 +307,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   buttonActive: {
-    width: '90%',
+    width: '95%',
     backgroundColor: '#6379F4',
     borderRadius: 10,
     height: 50,
@@ -317,7 +317,7 @@ const styles = StyleSheet.create({
   },
   buttonInactive: {
     alignSelf: 'center',
-    width: '90%',
+    width: '95%',
     backgroundColor: '#DADADA',
     borderRadius: 10,
     height: 50,

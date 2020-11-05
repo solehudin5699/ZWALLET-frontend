@@ -30,7 +30,7 @@ const ContentProfile = () => {
             <Text style={styles.infoTitle}>Personal Information</Text>
           </View>
           <View style={styles.iconArrow}>
-            <Icon name="arrow-right" size={25} color="#7A7886" type="feather" />
+            <Icon name="arrow-right" size={20} color="#7A7886" type="feather" />
           </View>
         </Pressable>
         {/* Change Password */}
@@ -41,7 +41,7 @@ const ContentProfile = () => {
             <Text style={styles.infoTitle}>Change Password</Text>
           </View>
           <View style={styles.iconArrow}>
-            <Icon name="arrow-right" size={25} color="#7A7886" type="feather" />
+            <Icon name="arrow-right" size={20} color="#7A7886" type="feather" />
           </View>
         </Pressable>
         {/* Change PIN */}
@@ -52,7 +52,7 @@ const ContentProfile = () => {
             <Text style={styles.infoTitle}>Change PIN</Text>
           </View>
           <View style={styles.iconArrow}>
-            <Icon name="arrow-right" size={25} color="#7A7886" type="feather" />
+            <Icon name="arrow-right" size={20} color="#7A7886" type="feather" />
           </View>
         </Pressable>
         {/* Notification */}
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
   },
   itemInformation: {
     // flex: 1,
-    marginVertical: 10,
+    marginVertical: 5,
     width: '100%',
     backgroundColor: '#E5E8ED',
     height: 70,

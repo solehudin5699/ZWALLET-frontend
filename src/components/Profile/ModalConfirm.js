@@ -70,7 +70,7 @@ const ModalConfirm = (props) => {
           borderColor: '#CBE15A',
           borderRadius: 3,
         }}>
-        <View style={{marginTop: 5, padding: 5}}>
+        <View style={{marginTop: 5, padding: 5, flexDirection: 'column'}}>
           <Text
             style={{
               fontSize: 18,
@@ -80,7 +80,13 @@ const ModalConfirm = (props) => {
           </Text>
           {status === 1 ? (
             <>
-              <View style={{width: '95%', marginTop: 20, alignItems: 'center'}}>
+              <View
+                style={{
+                  width: '100%',
+                  marginTop: 20,
+                  alignItems: 'center',
+                  alignSelf: 'center',
+                }}>
                 <Icon
                   reverse
                   name="check"
@@ -93,7 +99,13 @@ const ModalConfirm = (props) => {
             </>
           ) : null}
           {status === 0 ? (
-            <View style={{width: '100%', marginTop: 20, alignItems: 'center'}}>
+            <View
+              style={{
+                width: '100%',
+                marginTop: 20,
+                alignItems: 'center',
+                alignSelf: 'center',
+              }}>
               <Icon
                 reverse
                 name="close"
