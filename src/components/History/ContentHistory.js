@@ -241,7 +241,6 @@ const ContentHistory = (props) => {
           <TransactionEmpty />
         )
       ) : (
-        // <TransactionEmpty />
         <SectionList
           sections={allTransaction}
           sections={
@@ -251,6 +250,21 @@ const ContentHistory = (props) => {
               ? transactionIn
               : transactionOut
           }
+          // renderSectionFooter={({section: {period, data}}) =>
+          //   data.length === 0 ? (
+          //     <View
+          //       style={{
+          //         paddingHorizontal: 10,
+          //         justifyContent: 'center',
+          //         alignItems: 'center',
+          //       }}>
+          //       <Text
+          //         style={{color: '#7A7886', fontSize: 14, marginBottom: 10}}>
+          //         No transactions in this period
+          //       </Text>
+          //     </View>
+          //   ) : null
+          // }
           keyExtractor={(item) => Math.random().toString()}
           renderSectionHeader={({section: {period, data}}) =>
             !data.length ? null : (

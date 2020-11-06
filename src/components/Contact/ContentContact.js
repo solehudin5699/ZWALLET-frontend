@@ -145,11 +145,11 @@ const ContentContact = () => {
     // console.log(page);
   };
   useEffect(() => {
-    dispatch(setKeywordCreator(''));
     const unsubscribe = navigation.addListener('blur', () => {
       if (contact.length === 0 && keyword) {
         dispatch(getContactAPICreator('', 'name', 'ASC', 1, 15));
         dispatch(setPageCreator(1));
+        dispatch(setKeywordCreator(''));
       }
     });
     return unsubscribe;

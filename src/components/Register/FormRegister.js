@@ -15,7 +15,7 @@ const SignupSchema = Yup.object().shape({
   username: Yup.string()
     .matches(
       /^([a-z0-9]|_){0,}$/,
-      'Only lowercase, number and underscore are allowed',
+      'Only lowercase (a-z), number (0-9) and underscore (_) are allowed',
     )
     .min(4, 'Minimun length of 4 characters')
     .max(12, 'Max length of 12 characters')
